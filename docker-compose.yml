@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  django:
+    image: warzone_tools:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: >
+      sh -c "python manage.py setup_cron_jobs &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./warzone_tools:/warzone_tools
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+      - RQ_REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  rqworker:
+    image: warzone_tools:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python manage.py rqworker default
+    volumes:
+      - ./warzone_tools:/warzone_tools
+    environment:
+      - RQ_REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+
+  rqscheduler:
+    image: warzone_tools:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python manage.py rqscheduler
+    volumes:
+      - ./warzone_tools:/warzone_tools
+    environment:
+      - RQ_REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis

@@ -1,0 +1,18 @@
+{% extends 'battlefield_base.html' %}
+
+{% block battlefield_title %}Home{% endblock %}
+
+{% block battlefield_header %}Welcome to the Battlefield Home{% endblock %}
+
+{% block battlefield_content %}
+    <p>This is the main content of the Battlefield home page.</p>
+    This page should tell you when the next battlefield is expected to spawn
+
+    <ul>
+    {% for battlefield in battlefields %}
+        <li>Report time: {{ battlefield.report_time }} - {{ battlefield.owner }} will defend at {{battlefield.spawn_time}}</li>
+    {% endfor %}
+    </ul>
+    
+
+{% endblock %}

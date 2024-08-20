@@ -1,0 +1,9 @@
+<!-- battlefield_tracker/templates/battlefield_tracker/tracker.html -->
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="main">
+        <h2>{% block battlefield_header %}Battlefield{% endblock %}</h2>
+        {% block battlefield_content %}{% endblock %}
+    </div>
+{% endblock %}

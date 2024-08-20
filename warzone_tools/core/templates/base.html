@@ -1,0 +1,29 @@
+<!-- warzone_tools/templates/warzone_tools/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MSterup' warzone tools{% endblock %}</title>
+    {% load static %}
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    {% include 'header.html' %}
+    <main>
+        {% block content %}
+        <!-- Default content can go here -->
+        {% endblock %}
+    </main>
+    {% include 'footer.html' %}
+    <!-- JavaScript Libraries -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
