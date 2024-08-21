@@ -28,17 +28,19 @@ load_dotenv(env_path)
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = os.environ.get('DJANGO_DEBUG')
-DEBUG = False
+os.environ.get('DJANGO_DEBUG')
 
-ALLOWED_HOSTS = ["5.75.138.61", "localhost:8000"]
+ALLOWED_HOSTS = ["msterup.xyz", "www.msterup.xyz", "localhost:8000"]
 
 SECURE_HSTS_SECONDS = 31536000  # Recommend setting to one year
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = ['https://msterup.xyz', 'https://www.msterup.xyz']
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 
