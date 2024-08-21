@@ -1,3 +1,10 @@
 venv/
 .env
 certs/*
+.js
+.svg
+.pem
+nginx/
+warzone_tools/staticfiles/
+*.pyc
+*.db
