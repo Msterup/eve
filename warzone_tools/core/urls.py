@@ -19,7 +19,8 @@ from django.urls import include, path
 from core import views
 
 urlpatterns = [
-    path("", include("battlefield_tracker.urls")),
+    path("", views.home, name="home"),
+    path('battlefield-tracker/', include('battlefield_tracker.urls')),  # Include the app's URLs
     path('contact/', views.contact, name='contact'),
     path("admin/", admin.site.urls),
     path('django-rq/', include('django_rq.urls')),
