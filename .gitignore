@@ -6,5 +6,6 @@ certs/*
 .pem
 nginx/
 warzone_tools/staticfiles/
+warzone_tools/db.sqlite3
 *.pyc
 *.db

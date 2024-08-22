@@ -1,0 +1,35 @@
+# syntax=docker/dockerfile:1.4
+
+FROM --platform=$BUILDPLATFORM python:3.10.12 AS builder
+
+EXPOSE 8000
+WORKDIR /warzone_tools 
+
+# Install necessary dependencies
+RUN apt-get update && apt-get install -y \
+    firefox-esr \
+    wget \
+    libgtk-3-0 \
+    libdbus-glib-1-2 \
+    libxt6 \
+    redis \
+    && apt-get clean
+
+# Install GeckoDriver
+RUN wget https://github.com/mozilla/geckodriver/releases/latest/download/geckodriver-v0.35.0-linux64.tar.gz
+RUN tar -xzf geckodriver-v0.35.0-linux64.tar.gz \
+    && mv geckodriver /usr/local/bin/
+
+ENV MOZ_HEADLESS=1
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+COPY requirements.txt /warzone_tools/
+RUN pip3 install -r requirements.txt
+
+CMD redis-server --daemonize yes && \
+    python manage.py migrate & \
+    python manage.py rqworker default & \
+    python manage.py rqscheduler & \
+    python manage.py runserver 0.0.0.0:8000
