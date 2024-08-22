@@ -16,6 +16,7 @@ class BattlefieldCompletion(models.Model):
     winner = models.CharField(max_length=10, choices=FACTION_CHOICES)
     defender = models.CharField(max_length=10, choices=FACTION_CHOICES)
     system = models.CharField(max_length=100)
+    converted_to_scheduled = models.BooleanField(default=False)
     
     def __str__(self):
         return f'{self.system} - {self.winner} at {self.time}'
@@ -28,7 +29,7 @@ class BattlefieldCompletion(models.Model):
 
 class ScheduledBattlefield(models.Model):
     default_time = timezone.now() + timedelta(hours=4)
-    expected_time = models.DateTimeField(default= default_time)
+    expected_time = models.DateTimeField(default=default_time)
     defender = models.CharField(max_length=10, choices=FACTION_CHOICES)
     fc = models.CharField(max_length=10, default="No planned FC")
 
