@@ -1,0 +1,18 @@
+# Use the official Nginx image as a base
+FROM nginx:latest
+
+# Create the directory for the certificates if it doesn't already exist
+RUN mkdir -p /etc/nginx/certs
+
+# Copy SSL certificates from the project directory to the container
+COPY ./nginx/certs/dev.crt /etc/nginx/certs/dev.crt
+COPY ./nginx/certs/dev.key /etc/nginx/certs/dev.key
+
+# Copy the custom Nginx configuration file
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+
+# Expose ports 80 and 443
+EXPOSE 80 443
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
