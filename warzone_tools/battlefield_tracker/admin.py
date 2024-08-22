@@ -1,18 +1,24 @@
 from django.contrib import admin
 
 # Register your models here.
+from .models import BattlefieldCompletion, ScheduledBattlefield, LiveBattlefield, ScanResult
 
-from django.contrib import admin
-from .models import ScanResult, BattlefieldCompletion
+@admin.register(BattlefieldCompletion)
+class BattlefieldCompletionAdmin(admin.ModelAdmin):
+    list_display = ('system', 'completion_time', 'winner', 'defender')
+    ordering = ('-completion_time',)  # Orders by completion time, newest first
+
+@admin.register(ScheduledBattlefield)
+class ScheduledBattlefieldAdmin(admin.ModelAdmin):
+    list_display = ('expected_time', 'defender', 'fc')
+    ordering = ('-expected_time',)
+
+@admin.register(LiveBattlefield)
+class LiveBattlefieldAdmin(admin.ModelAdmin):
+    list_display = ('spawn_time', 'defender', 'fc')
+    ordering = ('-spawn_time',)
 
 @admin.register(ScanResult)
 class ScanResultAdmin(admin.ModelAdmin):
     list_display = ('time', 'result_string')
-    search_fields = ('result_string',)
-
-@admin.register(BattlefieldCompletion)
-class BattlefieldCompletionAdmin(admin.ModelAdmin):
-    list_display = ('time', 'winner', 'system')
-    list_filter = ('winner', 'system')
-    search_fields = ('system', 'winner')
     ordering = ('-time',)

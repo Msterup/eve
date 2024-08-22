@@ -19,9 +19,9 @@ from django.urls import include, path
 
 from .import views
 
-urlpatterns = [
-    path("", views.index, name="index"),
-    path("bfb/", views.battlefield_base, name="battlefield_base"),
-    path("scan_logs/", views.scan_logs, name="scan_logs")
+app_name = 'battlefield_tracker'
 
+urlpatterns = [
+    path("index/", views.index, name="index"),
+    path('<str:faction>/', views.battlefield_tracker, name='battlefields_tracker'),
 ]

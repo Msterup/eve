@@ -6,9 +6,12 @@ from django.http import HttpResponse
 from django.template import loader
 from battlefield_tracker.battlefield_timer import get_battlefield_timers
 
+def index(request, faction="caldari"):
+    return battlefield_tracker(request, faction)
 
-def index(request):
-    context = get_battlefield_timers()
+def battlefield_tracker(request, faction: str):
+    context = get_battlefield_timers(faction)
+    context["faction"] = faction.capitalize()
     return render(request, "index/index.html", context)
 
 def battlefield_base(request):

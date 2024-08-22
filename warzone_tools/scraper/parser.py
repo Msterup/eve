@@ -23,7 +23,7 @@ def consume_web_data(data):
             # A battlefield has completed in this system!
             owner = row[0]
             winner = get_winner(old_value, value, owner)
-            completion = BattlefieldCompletion.objects.create(owner=owner, winner=winner, system=value)
+            completion = BattlefieldCompletion.objects.create(owner=owner, winner=winner, system=row[1])
             completed_battlefields.append(completion)
 
         redis_client.set(key, value) # Updata database entry
