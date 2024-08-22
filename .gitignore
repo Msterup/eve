@@ -9,4 +9,4 @@ warzone_tools/staticfiles/
 warzone_tools/db.sqlite3
 docker-compose.override.yml
 *.pyc
-*.db
+db

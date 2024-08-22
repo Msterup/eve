@@ -9,6 +9,7 @@ services:
     container_name: django
     command: >
       sh -c "python manage.py setup_cron_jobs &&
+             python manage.py migrate &&
              gunicorn --bind 0.0.0.0:8000 core.wsgi:application"
     volumes:
       - ./warzone_tools:/warzone_tools

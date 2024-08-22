@@ -2,7 +2,7 @@
 from django.core.management.base import BaseCommand
 from rq_scheduler import Scheduler
 from redis import Redis
-from battlefield_tracker.tasks import report_completed_battlefields
+from battlefield_tracker.tasks import report_completed_battlefields, convert_historic_to_scheduled_battlefield, convert_scheduled_to_live_battlefield
 from battlefield_tracker.models import ScanResult
 
 class Command(BaseCommand):
@@ -18,6 +18,16 @@ class Command(BaseCommand):
         scheduler.cron(
             cron_string='* * * * *',
             func=report_completed_battlefields,
+            repeat=None  # Run indefinitely
+        )
+        scheduler.cron(
+            cron_string='* * * * *',
+            func=convert_historic_to_scheduled_battlefield,
+            repeat=None  # Run indefinitely
+        )
+        scheduler.cron(
+            cron_string='* * * * *',
+            func=convert_scheduled_to_live_battlefield,
             repeat=None  # Run indefinitely
         )
 
