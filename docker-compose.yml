@@ -72,8 +72,9 @@ services:
       - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./warzone_tools/staticfiles:/static
-      - ./warzone_tools/media:/media
+      - ./warzone_tools/static:/warzone_tools/static
+      - ./warzone_tools/staticfiles:/warzone_tools/staticfiles
+      - ./warzone_tools/media:/warzone_tools/media
     depends_on:
       - django
     networks:
