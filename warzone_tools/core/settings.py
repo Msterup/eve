@@ -28,9 +28,11 @@ load_dotenv(env_path)
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-os.environ.get('DJANGO_DEBUG')
 
-ALLOWED_HOSTS = ["msterup.xyz", "www.msterup.xyz", "localhost:8000"]
+DEBUG = eval(os.environ.get('DJANGO_DEBUG'))
+
+
+ALLOWED_HOSTS = ["msterup.xyz", "www.msterup.xyz", "localhost:8000", "django", '127.0.0.1']
 
 SECURE_HSTS_SECONDS = 31536000  # Recommend setting to one year
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
