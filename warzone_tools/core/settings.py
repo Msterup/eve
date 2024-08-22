@@ -31,7 +31,6 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 DEBUG = eval(os.environ.get('DJANGO_DEBUG'))
 
-
 ALLOWED_HOSTS = ["msterup.xyz", "www.msterup.xyz", "localhost:8000", "django", '127.0.0.1']
 
 SECURE_HSTS_SECONDS = 31536000  # Recommend setting to one year
