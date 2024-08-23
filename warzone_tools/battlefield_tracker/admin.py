@@ -5,7 +5,7 @@ from .models import BattlefieldCompletion, ScheduledBattlefield, LiveBattlefield
 
 @admin.register(BattlefieldCompletion)
 class BattlefieldCompletionAdmin(admin.ModelAdmin):
-    list_display = ('system', 'completion_time', 'winner', 'defender')
+    list_display = ('system', 'completion_time', 'winner', 'defender', "converted_to_scheduled")
     ordering = ('-completion_time',)  # Orders by completion time, newest first
 
 @admin.register(ScheduledBattlefield)

@@ -49,9 +49,13 @@ def convert_scheduled_to_live_battlefield():
     current_time = timezone.now()
 
     # Filter scheduled battlefields where the expected_time has passed
-    scheduled_battlefields = ScheduledBattlefield.objects.filter(expected_time__lte=current_time)
+    scheduled_battlefields = ScheduledBattlefield.objects.filter(expected_time__gte=current_time)
+    if not scheduled_battlefields:
+        return "No scheduled battlefields to convert"
+
 
     to_delete = []
+
 
     for scheduled in scheduled_battlefields:
         # Create a corresponding LiveBattlefield

@@ -17,9 +17,6 @@ class BattlefieldCompletion(models.Model):
     defender = models.CharField(max_length=10, choices=FACTION_CHOICES)
     system = models.CharField(max_length=100)
     converted_to_scheduled = models.BooleanField(default=False)
-    
-    def __str__(self):
-        return f'{self.system} - {self.winner} at {self.time}'
 
     @classmethod
     def delete_old_records(cls, days=3):
