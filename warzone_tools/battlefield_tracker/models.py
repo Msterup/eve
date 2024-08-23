@@ -28,7 +28,7 @@ class ScheduledBattlefield(models.Model):
     default_time = timezone.now() + timedelta(hours=4)
     expected_time = models.DateTimeField(default=default_time)
     defender = models.CharField(max_length=10, choices=FACTION_CHOICES)
-    fc = models.CharField(max_length=50, default=None)
+    fc = models.CharField(max_length=50, default=None, null=True)
 
     is_between_noon_and_four_hours_after = models.BooleanField(editable=False, default=False)
     
@@ -53,7 +53,7 @@ class ScheduledBattlefield(models.Model):
 class LiveBattlefield(models.Model):
     spawn_time = models.DateTimeField(default=timezone.now)
     defender = models.CharField(max_length=10, choices=FACTION_CHOICES)
-    fc = models.CharField(max_length=10, default="No planned FC")
+    fc = models.CharField(max_length=10, default=None, null=True)
     
     @classmethod
     def delete_old_records(cls, days=3):
