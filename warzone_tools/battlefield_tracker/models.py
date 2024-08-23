@@ -30,16 +30,16 @@ class ScheduledBattlefield(models.Model):
     defender = models.CharField(max_length=10, choices=FACTION_CHOICES)
     fc = models.CharField(max_length=50, default=None, null=True)
 
-    is_between_noon_and_four_hours_after = models.BooleanField(editable=False, default=False)
+    is_between_downtime_and_four_hours_after = models.BooleanField(editable=False, default=False)
     
     def save(self, *args, **kwargs):
         # Define the time range: Noon to 4 hours after noon
-        start_time = time(12, 0)  # 12:00 PM (Noon)
+        start_time = time(11, 0)  # 12:00 PM (Noon)
         end_time = (timezone.now() + timedelta(hours=4)).time()
         
         # Calculate if expected_time is between start_time and end_time
         expected_time_in_time = self.expected_time.time()
-        self.is_between_noon_and_four_hours_after = start_time <= expected_time_in_time <= end_time
+        self.is_between_downtime_and_four_hours_after = start_time <= expected_time_in_time <= end_time
         
         # Call the original save method
         super().save(*args, **kwargs)

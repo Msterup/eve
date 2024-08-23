@@ -1,6 +1,6 @@
 from scraper.extractor import get_web_data
 from scraper.parser import consume_web_data
-from datetime import timedelta
+from datetime import timedelta, time
 from django.utils import timezone
 
 from .models import BattlefieldCompletion, ScheduledBattlefield, LiveBattlefield
@@ -9,6 +9,21 @@ def report_completed_battlefields():
     data = get_web_data()
     result = consume_web_data(data)
     return result # For reporting in admin dashboard
+
+def create_downtime_scheduled_battlefields():
+    results = []
+    to_create = ['Caldari', 'Gallente']
+    
+    for defender in to_create:
+        scheduled_battlefield, created = ScheduledBattlefield.objects.get_or_create(
+            expected_time= time(12, 0),
+            defender=defender,
+            defaults={
+                'fc': None,
+            }
+        )
+        results.append(scheduled_battlefield)
+    return results
 
 def convert_historic_to_scheduled_battlefield():
     # Retrieve the last five BattlefieldCompletion records
@@ -78,7 +93,7 @@ def convert_scheduled_to_live_battlefield():
     # Delete the scheduled battlefields after processing
     for scheduled in to_delete:
         scheduled.delete()
-
+    # TODO: fix returns
     return results
 
 if __name__ == "__main__":
