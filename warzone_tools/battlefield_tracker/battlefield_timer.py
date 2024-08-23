@@ -36,7 +36,7 @@ def get_battlefield_timers(faction):
     all_battlefields = ScheduledBattlefield.objects.filter(
         faction_query,
         expected_time__gte=cutoff_time,
-        is_between_noon_and_four_hours_after=True,
+        is_between_downtime_and_four_hours_after=True,
         ).order_by("-expected_time")
     
     scheduled_readable_battlefields = []
