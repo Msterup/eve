@@ -54,8 +54,24 @@
                 <ul>
                     {% for battlefield in scheduled_battlefields %}
                         <li>
-                            Spawn time: {{ battlefield.expected_time }} <br>
-                            {{ battlefield.owner }} will fight a defensive battlefield <br>
+                            <span class="badge rounded-pill
+                                {% if battlefield.type == 'Downtime' %}
+                                    bg-warning
+                                {% elif battlefield.type == 'Normal' %}
+                                    bg-success
+                                {% elif battlefield.type == 'System Flipped' %}
+                                    bg-danger
+                                {% else %}
+                                    bg-secondary
+                                {% endif %}
+                            ">
+                                {{ battlefield.battlefield_type }}
+                            </span>
+                            <br>
+                            Spawn time: {{ battlefield.expected_time }} 
+                            <br>
+                            {{ battlefield.owner }} will fight a defensive battlefield 
+                            <br>
                             {% if battlefield.fc %}
                                 FC: {{ battlefield.fc }} has signed up to run a fleet for this objective.
                             {% else %}

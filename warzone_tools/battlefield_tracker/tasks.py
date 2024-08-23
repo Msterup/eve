@@ -1,6 +1,6 @@
 from scraper.extractor import get_web_data
 from scraper.parser import consume_web_data
-from datetime import timedelta, time
+import datetime
 from django.utils import timezone
 
 from .models import BattlefieldCompletion, ScheduledBattlefield, LiveBattlefield
@@ -16,8 +16,9 @@ def create_downtime_scheduled_battlefields():
     
     for defender in to_create:
         scheduled_battlefield, created = ScheduledBattlefield.objects.get_or_create(
-            expected_time= time(12, 0),
+            expected_time=datetime.datetime.combine(timezone.now().date(), datetime.time(11, 0)),
             defender=defender,
+            battlefield_type="Downtime",
             defaults={
                 'fc': None,
             }
@@ -35,12 +36,13 @@ def convert_historic_to_scheduled_battlefield():
 
     for completion in last_five_completions:
         # Calculate the expected_time as 4 hours after the completion time
-        expected_time = completion.completion_time + timedelta(hours=4)
+        expected_time = completion.completion_time + datetime.timedelta(hours=4)
 
         # Use get_or_create to ensure that we don't create duplicates
         scheduled_battlefield, created = ScheduledBattlefield.objects.get_or_create(
             expected_time=expected_time,
             defender=completion.defender,
+            battlefield_type="Normal",
             defaults={
                 'fc': None,
             }

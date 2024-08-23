@@ -25,6 +25,12 @@ class BattlefieldCompletion(models.Model):
         cls.objects.filter(time__lt=cutoff_date).delete()
 
 class ScheduledBattlefield(models.Model):
+    TYPE_CHOICES = [
+        ('Downtime', 'Downtime'),
+        ('Normal', 'Normal'),
+        ('System Flipped', 'System Flipped'),
+    ]
+    battlefield_type = models.CharField(max_length=15, choices=TYPE_CHOICES, default='Normal')
     default_time = timezone.now() + timedelta(hours=4)
     expected_time = models.DateTimeField(default=default_time)
     defender = models.CharField(max_length=10, choices=FACTION_CHOICES)
