@@ -27,7 +27,7 @@ def convert_historic_to_scheduled_battlefield():
             expected_time=expected_time,
             defender=completion.defender,
             defaults={
-                'fc': "No planned FC",
+                'fc': None,
             }
         )
 

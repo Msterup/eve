@@ -47,12 +47,13 @@ def consume_web_data(data):
 
         old_owner = redis_client.get(key)
         if old_owner is None:
-            old_owner = value # Handle no entries in database
+            old_owner = new_owner # Handle no entries in database
+        old_owner = str(old_owner)
 
         if old_owner != new_owner:
             # A system has flipped
             LiveBattlefield.objects.create(defender=old_owner)
-            results.append("Created live battledfield")
+            results.append(f"Created live battledfield oo: {old_owner} no {new_owner}")
 
 
     return results # Propergate results up to caller (for logging to admin dashboard)
