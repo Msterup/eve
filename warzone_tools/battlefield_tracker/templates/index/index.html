@@ -1,15 +1,21 @@
 {% extends 'battlefield_base.html' %}
 
 {% block battlefield_content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <!-- Faction Buttons -->
+        <nav class="nav nav-pills">
+            <a class="nav-link {% if faction == 'Caldari' %}active{% endif %}" href="{% url 'battlefield_tracker:battlefields_tracker' faction='Caldari' %}">Caldari Battlefields</a>
+            <a class="nav-link {% if faction == 'Gallente' %}active{% endif %}" href="{% url 'battlefield_tracker:battlefields_tracker' faction='Gallente' %}">Gallente Battlefields</a>
+            <a class="nav-link disabled {% if faction == 'Minmatar' %}active{% endif %}" href="{% url 'battlefield_tracker:battlefields_tracker' faction='Minmatar' %}">Minmatar Battlefields</a>
+            <a class="nav-link disabled {% if faction == 'Amarr' %}active{% endif %}" href="{% url 'battlefield_tracker:battlefields_tracker' faction='Amarr' %}">Amarr Battlefields</a>
+        </nav>
+        <!-- Toggle Local Time Button -->
+        <div class="text-end">
+            <button id="toggleTimeButton" class="btn btn-primary" data-showing-local="false">Unmodified text Show Local Time ({{ user_timezone }})</button>
+        </div>
+    </div>
 
-    <nav class="nav nav-pills justify-content-center mb-4">
-        <a class="nav-link {% if faction == 'Caldari' %}active{% endif %}" href="{% url 'battlefield_tracker:battlefields_tracker' faction='Caldari' %}">Caldari Battlefields</a>
-        <a class="nav-link {% if faction == 'Gallente' %}active{% endif %}" href="{% url 'battlefield_tracker:battlefields_tracker' faction='Gallente' %}">Gallente Battlefields</a>
-        <a class="nav-link disabled {% if faction == 'Minmatar' %}active{% endif %}" href="{% url 'battlefield_tracker:battlefields_tracker' faction='Minmatar' %}">Minmatar Battlefields</a>
-        <a class="nav-link disabled {% if faction == 'Amarr' %}active{% endif %}" href="{% url 'battlefield_tracker:battlefields_tracker' faction='Amarr' %}">Amarr Battlefields</a>
-    </nav>
-
-   <div class="container mt-4">
     <!-- Important Note Section -->
     <div class="card mb-4">
         <div class="card-body">
@@ -26,19 +32,24 @@
             <h5 class="card-title">Live battlefields:</h5>
             <p class="card-text">This section should prompt the user to fleet up and play EVE Online.</p>
             {% if live_battlefields %}
-                <ul>
+                <div class="list-group list-group-flush">
                     {% for battlefield in live_battlefields %}
-                        <li>
-                            Spawn time: {{ battlefield.spawn_time }} <br>
-                            {{ battlefield.owner }} will fight a defensive battlefield. <br>
-                            {% if battlefield.fc %}
-                                FC: {{ battlefield.fc }} has signed up to run a fleet for this objective.
-                            {% else %}
-                                No FC has signed up yet for this objective.
-                            {% endif %}
-                        </li>
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong>{{ battlefield.defender }} Defensive Battlefield</strong>
+                                <!-- Time Display -->
+                                <small class="text-muted server-time" data-time="{{ battlefield.spawn_time }}" data-timezone="UTC+0">Eve time: {{ battlefield.spawn_time }}</small>
+                            </div>
+                            <div class="mt-2">
+                                {% if battlefield.fc %}
+                                    <span class="text-success">FC: {{ battlefield.fc }} has signed up to run a fleet for this objective.</span>
+                                {% else %}
+                                    <span class="text-danger">No FC has signed up yet for this objective.</span>
+                                {% endif %}
+                            </div>
+                        </div>
                     {% endfor %}
-                </ul>
+                </div>
             {% else %}
                 <p>No live battlefields at the moment.</p>
             {% endif %}
@@ -51,35 +62,42 @@
             <h5 class="card-title">Upcoming battlefields:</h5>
             <p class="card-text">This section should let users know when a battlefield is about to spawn.</p>
             {% if scheduled_battlefields %}
-                <ul>
+                <div class="list-group list-group-flush">
                     {% for battlefield in scheduled_battlefields %}
-                        <li>
-                            <span class="badge rounded-pill
-                                {% if battlefield.type == 'Downtime' %}
-                                    bg-warning
-                                {% elif battlefield.type == 'Normal' %}
-                                    bg-success
-                                {% elif battlefield.type == 'System Flipped' %}
-                                    bg-danger
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <span class="badge rounded-pill
+                                        {% if battlefield.type == 'Downtime' %}
+                                            bg-warning
+                                        {% elif battlefield.type == 'Normal' %}
+                                            bg-success
+                                        {% elif battlefield.type == 'System Flipped' %}
+                                            bg-danger
+                                        {% else %}
+                                            bg-secondary
+                                        {% endif %}
+                                        me-2">{{ battlefield.battlefield_type }}
+                                    </span>
+                                    <strong>{{ battlefield.defender }} Defensive Battlefield</strong>
+                                </div>
+                                <!-- Time Display -->
+                                <small class="text-muted server-time" data-time="{{ battlefield.expected_time }}" data-timezone="UTC+0">Eve time: {{ battlefield.expected_time }}</small>
+                            </div>
+                            <div class="mt-2">
+                                <span class="text-muted">Countdown: </span>
+                                <span class="countdown" data-time="{{ battlefield.expected_time }}"></span>
+                            </div>
+                            <div class="mt-2">
+                                {% if battlefield.fc %}
+                                    <span class="text-success">FC: {{ battlefield.fc }} has signed up to run a fleet for this objective.</span>
                                 {% else %}
-                                    bg-secondary
+                                    <span class="text-danger">No FC has signed up yet for this objective.</span>
                                 {% endif %}
-                            ">
-                                {{ battlefield.battlefield_type }}
-                            </span>
-                            <br>
-                            Spawn time: {{ battlefield.expected_time }} 
-                            <br>
-                            {{ battlefield.owner }} will fight a defensive battlefield 
-                            <br>
-                            {% if battlefield.fc %}
-                                FC: {{ battlefield.fc }} has signed up to run a fleet for this objective.
-                            {% else %}
-                                No FC has signed up yet for this objective.
-                            {% endif %}
-                        </li>
+                            </div>
+                        </div>
                     {% endfor %}
-                </ul>
+                </div>
             {% else %}
                 <p>No scheduled battlefields at the moment.</p>
             {% endif %}
@@ -91,17 +109,119 @@
         <div class="card-body">
             <h5 class="card-title">Battlefield completion log:</h5>
             <p class="card-text">Below is a list of the last three days' battlefield completions:</p>
-            <ul>
+            <div class="list-group list-group-flush">
                 {% for battlefield in historic_battlefields %}
-                    <li>
-                        Report time: {{ battlefield.report_time }} <br>
-                        {{ battlefield.winner }} won a battlefield in {{ battlefield.system }} <br>
-                        {{ battlefield.owner }} will defend at {{ battlefield.spawn_time }}.
-                    </li>
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong>{{ battlefield.system }}</strong>
+                            <!-- Time Display -->
+                            <small class="text-muted">{{ battlefield.report_time }}</small>
+                        </div>
+                        <div class="mt-2">
+                            {{ battlefield.winner }} won a battlefield in {{ battlefield.system }}. <br>
+                            {{ battlefield.owner }} will defend at {{ battlefield.spawn_time }}.
+                        </div>
+                    </div>
                 {% endfor %}
-            </ul>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- JavaScript to handle the toggle and countdown -->
+<script>
+    // Function to set the button text based on the current state
+    function setButtonText(button) {
+        const isShowingLocalTime = button.getAttribute('data-showing-local') === 'true';
+        if (isShowingLocalTime) {
+            button.innerText = 'Show Eve Time (UTC+0)';
+        } else {
+            button.innerText = `Show Local Time (${Intl.DateTimeFormat().resolvedOptions().timeZone})`;
+        }
+    }
+
+    // Function to get the UTC offset in hours and minutes
+    function getUTCOffset(date) {
+        const offset = date.getTimezoneOffset();
+        const sign = offset <= 0 ? "+" : "-";
+        const absOffset = Math.abs(offset);
+        const hours = String(Math.floor(absOffset / 60)).padStart(2, '0');
+        const minutes = String(absOffset % 60).padStart(2, '0');
+        return `UTC${sign}${hours}:${minutes}`;
+    }
+
+    // Function to convert server time to local time string
+    function local_time_string(span) {
+        const serverTime = span.getAttribute('data-time');
+        const date = new Date(serverTime);
+        const localTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const localTime = date.toLocaleString();
+        const utcOffset = getUTCOffset(date);
+        return `${localTimezone}: ${localTime} ${utcOffset}`;
+    }
+
+    // Function to toggle the time display between Eve Time and Local Time
+    function toggleTime(button) {
+        const serverTimes = document.querySelectorAll('.server-time');
+        const isShowingLocalTime = button.getAttribute('data-showing-local') === 'true';
+
+        serverTimes.forEach((span) => {
+            if (isShowingLocalTime) {
+                // Switch to showing server time
+                const serverTime = span.getAttribute('data-time');
+                const date = new Date(serverTime);
+                span.innerText = `Eve time: ${date.toISOString().replace('T', ' ').split('.')[0]} UTC`;
+            } else {
+                // Switch to showing local time with UTC offset
+                span.innerText = local_time_string(span);
+            }
+        });
+
+        // Toggle the state for the next click
+        button.setAttribute('data-showing-local', !isShowingLocalTime);
+
+        // Update button text
+        setButtonText(button);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const button = document.getElementById('toggleTimeButton');
+        
+        // Set initial button text
+        setButtonText(button);
+
+        // Event listener for toggling time
+        button.addEventListener('click', function() {
+            toggleTime(button);
+        });
+
+        function updateCountdown(span, targetTime) {
+            const now = new Date();
+            const timeDiff = targetTime - now;
+
+            if (timeDiff <= 0) {
+                span.innerText = "Battlefield has started";
+                return;
+            }
+
+            const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+            span.innerText = `${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        function updateCountdowns() {
+            const countdowns = document.querySelectorAll('.countdown');
+            countdowns.forEach((span) => {
+                const serverTime = new Date(span.getAttribute('data-time'));
+                updateCountdown(span, serverTime);
+            });
+        }
+
+        // Initial countdown update and interval setup
+        updateCountdowns();
+        setInterval(updateCountdowns, 1000); // Update countdowns every second
+    });
+</script>
 {% endblock %}

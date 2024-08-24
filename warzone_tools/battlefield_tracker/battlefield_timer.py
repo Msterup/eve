@@ -43,7 +43,7 @@ def get_battlefield_timers(faction):
     for battlefield_data in all_battlefields:
         battlefield = {}
         battlefield["expected_time"] = battlefield_data.expected_time.strftime('%Y-%m-%d %H:%M:%S')
-        battlefield["owner"] = battlefield_data.defender
+        battlefield["defender"] = battlefield_data.defender
         battlefield["fc"] = battlefield_data.fc
         battlefield["battlefield_type"] = battlefield_data.battlefield_type
         scheduled_readable_battlefields.append(battlefield)
