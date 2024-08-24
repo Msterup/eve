@@ -22,7 +22,7 @@ def get_battlefield_timers(faction):
     for battlefield_data in all_battlefields:
         battlefield = {}
         battlefield["report_time"] = battlefield_data.completion_time.strftime('%Y-%m-%d %H:%M:%S')
-        battlefield["owner"] = battlefield_data.defender
+        battlefield["defender"] = battlefield_data.defender
         battlefield["winner"] = battlefield_data.winner
         battlefield["system"] = battlefield_data.system
         battlefield["spawn_time"] = (battlefield_data.completion_time + timedelta(hours=4)).strftime('%Y-%m-%d %H:%M:%S')
@@ -56,7 +56,7 @@ def get_battlefield_timers(faction):
     for battlefield_data in all_battlefields:
         battlefield = {}
         battlefield["spawn_time"] = battlefield_data.spawn_time.strftime('%Y-%m-%d %H:%M:%S')
-        battlefield["owner"] = battlefield_data.defender
+        battlefield["defender"] = battlefield_data.defender
         battlefield["fc"] = battlefield_data.fc
         live_readable_battlefields.append(battlefield)
 

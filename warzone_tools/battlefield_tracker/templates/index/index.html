@@ -1,6 +1,7 @@
 {% extends 'battlefield_base.html' %}
 
 {% block battlefield_content %}
+<!--TODO: Fix timecodes are not the same width-->
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <!-- Faction Buttons -->
@@ -119,7 +120,7 @@
                         </div>
                         <div class="mt-2">
                             {{ battlefield.winner }} won a battlefield in {{ battlefield.system }}. <br>
-                            {{ battlefield.owner }} will defend at {{ battlefield.spawn_time }}.
+                            {{ battlefield.defender }} will defend at {{ battlefield.spawn_time }}.
                         </div>
                     </div>
                 {% endfor %}
