@@ -31,7 +31,7 @@ class ScheduledBattlefield(models.Model):
         ('System Flipped', 'System Flipped'),
     ]
     battlefield_type = models.CharField(max_length=15, choices=TYPE_CHOICES, default='Normal')
-    default_time = timezone.now() + timedelta(hours=4)
+    default_time = models.DateField(default=timezone.now)
     expected_time = models.DateTimeField(default=default_time)
     defender = models.CharField(max_length=10, choices=FACTION_CHOICES)
     fc = models.CharField(max_length=50, default=None, null=True)
