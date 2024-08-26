@@ -116,6 +116,28 @@ def consume_web_data(data):
             obj.contested = system_data['contested']
             obj.last_updated = completion_time
             obj.save()
+        if not created:
+            update_data = {}
+
+            # Check and update each mapped field
+            for original_field, mapped_field in field_map.items():
+                current_value = getattr(obj, mapped_field)
+                new_value = system_data.get(original_field, current_value)
+                if current_value != new_value:
+                    update_data[mapped_field] = new_value
+
+            # Check and update additional fields
+            if obj.status != system_data['status']:
+                update_data['status'] = system_data['status']
+
+            if obj.contested != system_data['contested']:
+                update_data['contested'] = system_data['contested']
+
+            update_data['last_updated'] = completion_time  # Always update the last_updated field
+
+            # Perform the update only if there are changes
+            if update_data:
+                ModelClass.objects.filter(pk=obj.pk).update(**update_data)
 
         results.append(f"System {'created' if created else 'updated'}: {obj.name}")
 

@@ -91,16 +91,17 @@ def assign_advantage(system_data, is_attack, advantage_type, value):
 #@persist_to_file('/warzone_tools/cache.dat') # For debug
 def get_adv_data(faction, desired_status):
     gecko_driver_path = '/usr/local/bin/geckodriver'
-    # Initialize Firefox options
     firefox_options = Options()
     firefox_options.add_argument('--headless')  # Run in headless mode
-    firefox_options.add_argument('--window-size=1920,1080')  # Set the window size
+    firefox_options.add_argument('--window-size=800,400')  # Set the window size
 
     # Create and configure a Firefox profile
     firefox_profile = webdriver.FirefoxProfile()
     firefox_profile.set_preference("toolkit.cosmeticAnimations.enabled", False)  # Disable animations
     firefox_profile.set_preference("layout.css.scroll-behavior.enabled", False)  # Disable smooth scrolling
     firefox_profile.set_preference("general.smoothScroll", False)  # Disable smooth scrolling
+    firefox_profile.set_preference("media.peerconnection.enabled", False)  # Disable WebRTC
+    firefox_profile.set_preference("webgl.disabled", True)  # Disable WebGL
 
     # Merge the profile into the options
     firefox_options.profile = firefox_profile
@@ -118,7 +119,12 @@ def get_adv_data(faction, desired_status):
     # Wait until the page is fully loaded
     WebDriverWait(driver, 20).until(
         lambda d: d.execute_script('return document.readyState') == 'complete'
-    ) 
+    )
+    driver.execute_script("""
+        window.requestAnimationFrame = function(callback) {
+            setTimeout(function() { callback(Date.now()); }, 1000 / 2);  // Limit to 2 FPS
+        };
+    """)
 
     # Scroll to the element with the text "Warzone Map" and wait for it to load
     target_xpath = "//p[@class='message-headline' and text()='Warzone Map']"
