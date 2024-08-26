@@ -6,4 +6,4 @@ class Command(BaseCommand):
     help = "Add a test battlefield completion"
 
     def handle(self, *args, **options):
-        completion = BattlefieldCompletion.objects.create(defender="Caldari", winner='Caldari', system="Jita")
+        completion = BattlefieldCompletion.objects.create(defender="caldari", winner='caldari', system="Jita")

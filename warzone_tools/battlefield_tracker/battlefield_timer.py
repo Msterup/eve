@@ -7,10 +7,10 @@ from django.utils import timezone
 def get_battlefield_timers(faction):
 
     faction = faction.capitalize()
-    if faction in ['Caldari', 'Gallente']:
-        faction_query = Q(defender='Caldari') | Q(defender='Gallente')
-    elif faction in ['Minmatar', 'Amarr']:
-        faction_query = Q(defender='Minmatar') | Q(defender='Amarr')
+    if faction in ['caldari', 'gallente']:
+        faction_query = Q(defender='caldari') | Q(defender='gallente')
+    elif faction in ['minmatar', 'amarr']:
+        faction_query = Q(defender='minmatar') | Q(defender='amarr')
     else:
         faction_query = Q()
 
@@ -33,7 +33,7 @@ def get_battlefield_timers(faction):
     # Scheduled battlefields
     cutoff_time = timezone.now() - timedelta(hours=4)
 
-    all_battlefields = ScheduledBattlefield.objects.filter(
+    all_battlefields = ScheduledBattlefield.objects.all().filter(
         faction_query,
         expected_time__gte=cutoff_time,
         is_between_downtime_and_four_hours_after=True,
@@ -61,5 +61,7 @@ def get_battlefield_timers(faction):
         live_readable_battlefields.append(battlefield)
 
     result["live_battlefields"] = live_readable_battlefields
+
+    # TODO: Find and report systems with advantage making them undetectable
 
     return result

@@ -6,10 +6,10 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <!-- Faction Buttons -->
         <nav class="nav nav-pills">
-            <a class="nav-link {% if faction == 'Caldari' %}active{% endif %}" href="{% url 'battlefield_tracker:battlefields_tracker' faction='Caldari' %}">Caldari Battlefields</a>
-            <a class="nav-link {% if faction == 'Gallente' %}active{% endif %}" href="{% url 'battlefield_tracker:battlefields_tracker' faction='Gallente' %}">Gallente Battlefields</a>
-            <a class="nav-link disabled {% if faction == 'Minmatar' %}active{% endif %}" href="{% url 'battlefield_tracker:battlefields_tracker' faction='Minmatar' %}">Minmatar Battlefields</a>
-            <a class="nav-link disabled {% if faction == 'Amarr' %}active{% endif %}" href="{% url 'battlefield_tracker:battlefields_tracker' faction='Amarr' %}">Amarr Battlefields</a>
+            <a class="nav-link {% if faction == 'caldari' %}active{% endif %}" href="{% url 'battlefield_tracker:battlefields_tracker' faction='caldari' %}">Caldari Battlefields</a>
+            <a class="nav-link {% if faction == 'gallente' %}active{% endif %}" href="{% url 'battlefield_tracker:battlefields_tracker' faction='gallente' %}">Gallente Battlefields</a>
+            <a class="nav-link {% if faction == 'minmatar' %}active{% endif %}" href="{% url 'battlefield_tracker:battlefields_tracker' faction='minmatar' %}">Minmatar Battlefields</a>
+            <a class="nav-link {% if faction == 'amarr' %}active{% endif %}" href="{% url 'battlefield_tracker:battlefields_tracker' faction='amarr' %}">Amarr Battlefields</a>
         </nav>
         <!-- Toggle Local Time Button -->
         <div class="text-end">

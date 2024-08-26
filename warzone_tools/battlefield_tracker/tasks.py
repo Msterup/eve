@@ -1,18 +1,18 @@
-from scraper.extractor import get_web_data
-from scraper.parser import consume_web_data
 import datetime
 from django.utils import timezone
 
+from battlefield_tracker.util.scraper.extractor import get_adv_data
+from battlefield_tracker.util.scraper.parser import consume_web_data
 from .models import BattlefieldCompletion, ScheduledBattlefield, LiveBattlefield
 
-def report_completed_battlefields():
-    data = get_web_data()
+def report_completed_battlefields(faction, status):
+    data = get_adv_data(faction, status)
     result = consume_web_data(data)
     return result # For reporting in admin dashboard
 
 def create_downtime_scheduled_battlefields():
     results = []
-    to_create = ['Caldari', 'Gallente']
+    to_create = ['caldari', 'gallente', "minmatar", "amarr"]
     
     for defender in to_create:
         scheduled_battlefield, created = ScheduledBattlefield.objects.get_or_create(
@@ -35,7 +35,7 @@ def convert_historic_to_scheduled_battlefield():
     results = []
 
     for completion in last_five_completions:
-        # Calculate the expected_time as 4 hours after the completion time
+        # TODO: Check typs on this, it will not go in database 
         expected_time = completion.completion_time + datetime.timedelta(hours=4)
 
         # Use get_or_create to ensure that we don't create duplicates
@@ -85,9 +85,7 @@ def convert_scheduled_to_live_battlefield():
         )
 
         # Log the result
-        result = f"LiveBattlefield {'created' if created else 'already exists'} for {scheduled.defender} at {scheduled.expected_time}"
-        print(result)
-        results.append(result)
+        results.append(f"LiveBattlefield {'created' if created else 'already exists'} for {scheduled.defender} at {scheduled.expected_time}")
 
         # Collect the ScheduledBattlefield to delete
         to_delete.append(scheduled)
@@ -99,5 +97,7 @@ def convert_scheduled_to_live_battlefield():
     return results
 
 if __name__ == "__main__":
-    report_completed_battlefields()
+    factions = ["caldari", "amarr"]
+    for faction in factions:
+        report_completed_battlefields(faction, "Frontline")
 
