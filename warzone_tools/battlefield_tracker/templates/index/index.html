@@ -23,6 +23,8 @@
             <h5 class="card-title">Important note about data on this page:</h5>
             <p class="card-text">
                 All data is gathered by scraping <a href="https://www.eveonline.com/frontlines" target="_blank">eveonline.com/frontlines</a> and makes no guarantee about the accuracy.
+                <br>
+                Data is pulled every minute for frontlines, every 10 minutes for command operations, and at downtime for rearguard systems.
             </p>
         </div>
     </div>
@@ -111,7 +113,6 @@
             <h5 class="card-title">Battlefield completion log:</h5>
             <p class="card-text">Below is a list of the last three days' battlefield completions:</p>
             <div class="list-group list-group-flush">
-            <p class="card-text">Below is a list of the last three days battlefield completions:</p>
             <ul>
                 {% for battlefield in historic_battlefields %}
                     <div class="list-group-item">
@@ -126,7 +127,7 @@
                         </div>
                     </div>
                 {% endfor %}
-            </div>
+            </ul>
         </div>
     </div>
 </div>

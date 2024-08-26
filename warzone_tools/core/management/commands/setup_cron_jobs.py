@@ -42,7 +42,7 @@ class Command(BaseCommand):
             )
         # Schedule report_completed_battlefields for each faction
         scheduler.cron(
-            cron_string='45 * * * *',
+            cron_string='50 10 * * *',
             func=report_completed_battlefields,
             args=[faction, "Rearguard"],  # Pass faction as argument
             repeat=None,  # Run indefinitely
@@ -50,7 +50,7 @@ class Command(BaseCommand):
             result_ttl=timedelta(hours=18).total_seconds(),
         )
         scheduler.cron(
-            cron_string='15 * * * *',
+            cron_string='50 10 * * *',
             func=report_completed_battlefields,
             args=[faction, "Rearguard"],  # Pass faction as argument
             repeat=None,  # Run indefinitely
@@ -73,7 +73,7 @@ class Command(BaseCommand):
 
         # Schedule create_downtime_scheduled_battlefields to run every day at 9 AM
         scheduler.cron(
-            cron_string='0 9 * * *',
+            cron_string='0 7 * * *',
             func=create_downtime_scheduled_battlefields,
             repeat=None,  # Run indefinitely
             result_ttl=timedelta(hours=18).total_seconds(),

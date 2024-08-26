@@ -196,7 +196,7 @@ def get_adv_data(faction, desired_status):
             )
             actions = ActionChains(driver)
             actions.move_to_element(hover_element).perform()
-            time.sleep(1.2)
+            time.sleep(3.2)
             objectives_div = WebDriverWait(driver, 20).until(
                 EC.presence_of_element_located((By.XPATH, "//div[contains(text(), 'Completed Objectives:')]"))
             )
