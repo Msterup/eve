@@ -22,12 +22,12 @@ class Command(BaseCommand):
         # Schedule report_completed_battlefields for each faction
         for faction in factions:
             scheduler.cron(
-                cron_string='*/3 * * * *',
+                cron_string='*/1 * * * *',
                 func=report_completed_battlefields,
                 args=[faction, "Frontline"],  # Pass faction as argument
                 repeat=None,  # Run indefinitely
                 timeout=600,
-                ttl=timedelta(hours=18).total_seconds(),
+                result_ttl=timedelta(hours=18).total_seconds(),
 
             )
         # Schedule report_completed_battlefields for each faction
@@ -38,7 +38,7 @@ class Command(BaseCommand):
                 args=[faction, "Command Operations"],  # Pass faction as argument
                 repeat=None,  # Run indefinitely
                 timeout=600,
-                ttl=timedelta(hours=18).total_seconds(),
+                result_ttl=timedelta(hours=18).total_seconds(),
             )
         # Schedule report_completed_battlefields for each faction
         scheduler.cron(
@@ -47,7 +47,7 @@ class Command(BaseCommand):
             args=[faction, "Rearguard"],  # Pass faction as argument
             repeat=None,  # Run indefinitely
             timeout=600,
-            ttl=timedelta(hours=18).total_seconds(),
+            result_ttl=timedelta(hours=18).total_seconds(),
         )
         scheduler.cron(
             cron_string='15 * * * *',
@@ -55,20 +55,20 @@ class Command(BaseCommand):
             args=[faction, "Rearguard"],  # Pass faction as argument
             repeat=None,  # Run indefinitely
             timeout=600,
-            ttl=timedelta(hours=18).total_seconds(),
+            result_ttl=timedelta(hours=18).total_seconds(),
         )
 
         # Schedule conversion and cleanup tasks
         scheduler.cron(
-            cron_string='*/2 * * * *',
+            cron_string='*/1 * * * *',
             func=convert_historic_to_scheduled_battlefield,
             repeat=None  # Run indefinitely
         )
         scheduler.cron(
-            cron_string='*/2 * * * *',
+            cron_string='*/1 * * * *',
             func=convert_scheduled_to_live_battlefield,
             repeat=None,  # Run indefinitely
-            ttl=timedelta(hours=18).total_seconds(),
+            result_ttl=timedelta(hours=18).total_seconds(),
         )
 
         # Schedule create_downtime_scheduled_battlefields to run every day at 9 AM
@@ -76,7 +76,7 @@ class Command(BaseCommand):
             cron_string='0 9 * * *',
             func=create_downtime_scheduled_battlefields,
             repeat=None,  # Run indefinitely
-            ttl=timedelta(hours=18).total_seconds(),
+            result_ttl=timedelta(hours=18).total_seconds(),
         )
 
         # Schedule ScanResult.delete_old_records to run every day at 11 AM
@@ -84,7 +84,7 @@ class Command(BaseCommand):
             cron_string='0 11 * * *',  # Cron time string format
             func=ScanResult.delete_old_records,
             repeat=None,  # Run indefinitely
-            ttl=timedelta(hours=18).total_seconds(),
+            result_ttl=timedelta(hours=18).total_seconds(),
             kwargs={'days': 3},  # Ensure 'days' argument is passed correctly
         )
 
