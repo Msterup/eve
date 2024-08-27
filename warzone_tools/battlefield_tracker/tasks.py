@@ -8,7 +8,7 @@ from .models import BattlefieldCompletion, ScheduledBattlefield, LiveBattlefield
 def report_completed_battlefields(faction, status):
     data = get_adv_data(faction, status)
     result = consume_web_data(data)
-    return result # For reporting in admin dashboard
+    return data
 
 def create_downtime_scheduled_battlefields():
     results = []
@@ -42,6 +42,7 @@ def convert_historic_to_scheduled_battlefield():
         scheduled_battlefield, created = ScheduledBattlefield.objects.get_or_create(
             expected_time=expected_time,
             defender=completion.defender,
+            system=completion.system,
             battlefield_type="Normal",
             defaults={
                 'fc': None,

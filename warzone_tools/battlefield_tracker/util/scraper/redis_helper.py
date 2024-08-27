@@ -7,7 +7,7 @@ def update_advantage_in_redis(redis_client, system, key, values):
         old_advantage = 100 # Handle no entries in database, ask for full system scan
     old_advantage = int(old_advantage)
 
-    advantage_swing = old_advantage - advantage
+    advantage_swing = abs(old_advantage - advantage)
     redis_client.set(redis_key, advantage) # Updata database entry
 
     return advantage_swing

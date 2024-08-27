@@ -173,7 +173,7 @@ def get_adv_data(faction, desired_status):
         system_data = {}
         # Scroll the row into view
         if idx == 0:
-            time.sleep(4)
+            time.sleep(2)
         cols = row.find_elements(By.TAG_NAME, "td")
         # Get data from cols
         status = cols[3].text
@@ -190,7 +190,8 @@ def get_adv_data(faction, desired_status):
         swing = update_advantage_in_redis(redis_client, system_data["system"], "base_advantage", system_data)
         if swing != 0:
             system_data["update_advantage"] = True
-        
+            print(f"Getting advanced advantage {system_data['system']}")
+            
             driver.execute_script("arguments[0].scrollIntoView();", scrollable_container, cols[0])
             driver.execute_script("arguments[0].scrollIntoView();", full_table)
             driver.execute_script("window.scrollBy(0, -100);")  # Adjust the value as needed
@@ -215,7 +216,7 @@ def get_adv_data(faction, desired_status):
                 assign_advantage(system_data, is_attack, "objectives_advantage", match.group(1))
                 match = regex.search(systems_div.text)
                 assign_advantage(system_data, is_attack, "systems_advantage", match.group(1))
-        print(f"Gathered data: {system_data}")
+        print(f"Gathered data: {system_data}, swing: {swing}")
         data[system_data["system"]] = system_data
 
     driver.quit()

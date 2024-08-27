@@ -29,6 +29,7 @@ def consume_web_data(data):
     if timestamp:
         # Parse the timestamp string to a datetime object
         completion_time = datetime.fromisoformat(timestamp)
+        completion_time = timezone.make_aware(completion_time, timezone.get_current_timezone())
     else:
         completion_time = timezone.now()
 
@@ -48,10 +49,10 @@ def consume_web_data(data):
         else:
             ModelClass = AM_System
             field_map = {
-                'caldar_objectives_advantage': 'amarr_objectives_advantage',
-                'gallente_objectives_advantage': 'minmatar_objectives_advantage',
-                'caldari_systems_advantage': 'amarr_systems_advantage',
-                'gallente_systems_advantage': 'minmatar_systems_advantage'
+                'amarr_objectives_advantage': 'amarr_objectives_advantage',
+                'minmatar_objectives_advantage': 'minmatar_objectives_advantage',
+                'amarr_systems_advantage': 'amarr_systems_advantage',
+                'minmatar_systems_advantage': 'minmatar_systems_advantage'
             }
 
         # Prepare the defaults dynamically based on the field_map ??? what
@@ -78,7 +79,7 @@ def consume_web_data(data):
             for original_field, mapped_field in field_map.items():
                 if "objective" in original_field:
                     swing = update_advantage_in_redis(redis_client, system_data['system'], mapped_field, system_data)
-                    if swing > 12:
+                    if swing > 3:
                         if "caldari" in original_field:
                             winner = 'caldari'
                         elif "gallente" in original_field:
@@ -126,7 +127,7 @@ def consume_web_data(data):
 
             ModelClass.objects.filter(pk=obj.pk).update(**update_data)
 
-        results.append(f"System {'created' if created else 'updated'}: {obj.name}")
+        results.append(f"System {'created' if created else 'updated'}: {obj.name}.")
 
     return results # Propergate results up to caller (for logging to admin dashboard)
 
