@@ -54,7 +54,7 @@ def consume_web_data(data):
                 'gallente_systems_advantage': 'minmatar_systems_advantage'
             }
 
-        # Prepare the defaults dynamically based on the field_map
+        # Prepare the defaults dynamically based on the field_map ??? what
         defaults = {
             'status': system_data['status'],
             'contested': system_data['contested'],
@@ -69,41 +69,34 @@ def consume_web_data(data):
             name=system_data['system'],
             defaults=defaults
         )
-        
-        for original_field, mapped_field in field_map.items():
-            if "objective" in original_field:
-                swing = update_advantage_in_redis(redis_client, system_data['system'], mapped_field, system_data)
-                if swing > 12:
-                    if "caldari" in original_field:
-                        winner = 'caldari'
-                    elif "gallente" in original_field:
-                        winner = 'gallente'
-                    elif "amarr" in original_field:
-                        winner = 'amarr'
-                    else:
-                        winner = 'minmatar'
-                    
-                    BattlefieldCompletion.objects.create(
-                        completion_time=completion_time,
-                        winner=winner,
-                        defender=system_data['defender'],
-                        system=system_data['system']
-                    )
-
-                    # Call the remove_oldest_live_battlefield function
-                    remove_result = remove_oldest_live_battlefield(defender=system_data["defender"])
-                    results.append(remove_result)
-
-                    results.append(f"BattlefieldCompletion created for system {system_data['system']} with winner {winner}")
-                    results.append(f"Significant swing detected for {mapped_field}: {swing}")
-        
-        if not created:
+        if system_data["update_advantage"]:
             for original_field, mapped_field in field_map.items():
-                setattr(obj, mapped_field, system_data.get(original_field, getattr(obj, mapped_field)))
-            obj.status = system_data['status']
-            obj.contested = system_data['contested']
-            obj.last_updated = completion_time
-            obj.save()
+                if "objective" in original_field:
+                    swing = update_advantage_in_redis(redis_client, system_data['system'], mapped_field, system_data)
+                    if swing > 12:
+                        if "caldari" in original_field:
+                            winner = 'caldari'
+                        elif "gallente" in original_field:
+                            winner = 'gallente'
+                        elif "amarr" in original_field:
+                            winner = 'amarr'
+                        else:
+                            winner = 'minmatar'
+                        
+                        BattlefieldCompletion.objects.create(
+                            completion_time=completion_time,
+                            winner=winner,
+                            defender=system_data['defender'],
+                            system=system_data['system']
+                        )
+
+                        # Call the remove_oldest_live_battlefield function
+                        remove_result = remove_oldest_live_battlefield(defender=system_data["defender"])
+                        results.append(remove_result)
+
+                        results.append(f"BattlefieldCompletion created for system {system_data['system']} with winner {winner}")
+                        results.append(f"Significant swing detected for {mapped_field}: {swing}")
+        
         if not created:
             update_data = {}
 

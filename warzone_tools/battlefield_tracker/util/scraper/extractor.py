@@ -189,9 +189,11 @@ def get_adv_data(faction, desired_status):
         system_data["defender"] = get_faction(cols[0])
         system_data["contested"] = cols[4].text.strip('%')
         system_data["base_advantage"] = cols[5].text.strip('%')
+        system_data["update_advantage"] = False
 
         swing = update_advantage_in_redis(redis_client, system_data["system"], "base_advantage", system_data)
         if swing != 0:
+            system_data["update_advantage"] = True
         
             driver.execute_script("arguments[0].scrollIntoView();", scrollable_container, cols[0])
             driver.execute_script("arguments[0].scrollIntoView();", full_table)
