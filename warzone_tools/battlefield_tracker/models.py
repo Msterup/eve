@@ -22,6 +22,7 @@ class System(models.Model):
     status = models.CharField(max_length=255, choices=SYSTEM_STATUS)
     contested = models.DecimalField(max_digits=5, decimal_places=2)
     last_updated = models.DateTimeField(auto_now=True) 
+    base_advantage = models.PositiveSmallIntegerField(blank=True)
 
     class Meta:
         abstract = True

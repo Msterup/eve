@@ -8,21 +8,9 @@ if __name__ == "__main__": # for local debug
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
     django.setup()
 from battlefield_tracker.util.scraper.extractor import get_adv_data
-from battlefield_tracker.models import AM_System, CG_System, BattlefieldCompletion, ScanResult, LiveBattlefield
+from battlefield_tracker.util.scraper.redis_helper import update_advantage_in_redis
+from battlefield_tracker.models import AM_System, CG_System, BattlefieldCompletion, LiveBattlefield
 
-def update_advantage_in_redis(redis_client, system, key, values):
-    advantage = values[key]
-    redis_key = f"{system}_{key}"
-
-    old_advantage = redis_client.get(redis_key)
-    if old_advantage is None:
-        old_advantage = advantage # Handle no entries in database
-    old_advantage = int(old_advantage)
-
-    advantage_swing = old_advantage - advantage
-    redis_client.set(redis_key, advantage) # Updata database entry
-
-    return advantage_swing
     
 def remove_oldest_live_battlefield(defender):
     oldest_battlefield = LiveBattlefield.objects.filter(defender=defender).order_by('spawn_time').first()

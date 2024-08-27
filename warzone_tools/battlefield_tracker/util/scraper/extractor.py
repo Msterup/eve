@@ -7,8 +7,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 from datetime import datetime
-import time, re
-import json
+import time, re, json, redis
+if __name__ == "__main__": # for local debug
+    import sys, os
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../')))
+from battlefield_tracker.util.scraper.redis_helper import update_advantage_in_redis
 
 # for quick debug of depedent functions
 def persist_to_file(file_name):
@@ -162,6 +165,7 @@ def get_adv_data(faction, desired_status):
     allow_all_button.click()
 
 
+    redis_client = redis.StrictRedis(host='redis', port=6379, db=1)
     regex = re.compile(r'(\d+)%')
     data = {"timestamp": retrival_time,
             "faction": faction}
@@ -180,33 +184,35 @@ def get_adv_data(faction, desired_status):
         system_data["system"] = cols[1].text 
         system_data["defender"] = get_faction(cols[0])
         system_data["contested"] = cols[4].text.strip('%')
-        time.sleep(0.2)
+        system_data["base_advantage"] = cols[5].text.strip('%')
+
+        swing = update_advantage_in_redis(redis_client, system_data["system"], "base_advantage", system_data)
+        if swing != 0:
         
-        
-        driver.execute_script("arguments[0].scrollIntoView();", scrollable_container, cols[0])
-        driver.execute_script("arguments[0].scrollIntoView();", full_table)
-        driver.execute_script("window.scrollBy(0, -100);")  # Adjust the value as needed
-        driver.execute_script("arguments[0].click();", cols[0])
-        
-        time.sleep(1)  # Optional: wait for the scrolling to complete
-        looplist = [(True, "attacker"), (False, "defender")]
-        for is_attack, player in looplist:
-            hover_element = WebDriverWait(driver, 20).until(
-                EC.presence_of_element_located((By.XPATH, f"//div[contains(@class, '{player}Advantage')]"))
-            )
-            actions = ActionChains(driver)
-            actions.move_to_element(hover_element).perform()
-            time.sleep(3.2)
-            objectives_div = WebDriverWait(driver, 20).until(
-                EC.presence_of_element_located((By.XPATH, "//div[contains(text(), 'Completed Objectives:')]"))
-            )
-            systems_div = WebDriverWait(driver, 20).until(
-                EC.presence_of_element_located((By.XPATH, "//div[contains(text(), 'Neighboring Systems:')]"))
-            )
-            match = regex.search(objectives_div.text)
-            assign_advantage(system_data, is_attack, "objectives_advantage", match.group(1))
-            match = regex.search(systems_div.text)
-            assign_advantage(system_data, is_attack, "systems_advantage", match.group(1))
+            driver.execute_script("arguments[0].scrollIntoView();", scrollable_container, cols[0])
+            driver.execute_script("arguments[0].scrollIntoView();", full_table)
+            driver.execute_script("window.scrollBy(0, -100);")  # Adjust the value as needed
+            driver.execute_script("arguments[0].click();", cols[0])
+            
+            time.sleep(1)  # Optional: wait for the scrolling to complete
+            looplist = [(True, "attacker"), (False, "defender")]
+            for is_attack, player in looplist:
+                hover_element = WebDriverWait(driver, 20).until(
+                    EC.presence_of_element_located((By.XPATH, f"//div[contains(@class, '{player}Advantage')]"))
+                )
+                actions = ActionChains(driver)
+                actions.move_to_element(hover_element).perform()
+                time.sleep(6)
+                objectives_div = WebDriverWait(driver, 20).until(
+                    EC.presence_of_element_located((By.XPATH, "//div[contains(text(), 'Completed Objectives:')]"))
+                )
+                systems_div = WebDriverWait(driver, 20).until(
+                    EC.presence_of_element_located((By.XPATH, "//div[contains(text(), 'Neighboring Systems:')]"))
+                )
+                match = regex.search(objectives_div.text)
+                assign_advantage(system_data, is_attack, "objectives_advantage", match.group(1))
+                match = regex.search(systems_div.text)
+                assign_advantage(system_data, is_attack, "systems_advantage", match.group(1))
         print(f"Gathered data: {system_data}")
         data[system_data["system"]] = system_data
 
