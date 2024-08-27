@@ -11,11 +11,7 @@ import time, re, json, redis
 if __name__ == "__main__": # for local debug
     import sys, os
     sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../')))
-<<<<<<< HEAD
 from battlefield_tracker.util.scraper.redis_helper import update_advantage_in_redis
-=======
-from redis_helper import update_advantage_in_redis
->>>>>>> 7fe1695 (Smarter system scan)
 
 # for quick debug of depedent functions
 def persist_to_file(file_name):

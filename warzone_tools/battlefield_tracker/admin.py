@@ -10,12 +10,12 @@ class BattlefieldCompletionAdmin(admin.ModelAdmin):
 
 @admin.register(ScheduledBattlefield)
 class ScheduledBattlefieldAdmin(admin.ModelAdmin):
-    list_display = ('expected_time', 'defender', 'fc')
+    list_display = ('system', 'expected_time', 'defender', 'fc')
     ordering = ('-expected_time',)
 
 @admin.register(LiveBattlefield)
 class LiveBattlefieldAdmin(admin.ModelAdmin):
-    list_display = ('spawn_time', 'defender', 'fc')
+    list_display = ('system','spawn_time', 'defender', 'fc')
     ordering = ('-spawn_time',)
 
 @admin.register(ScanResult)
@@ -25,14 +25,14 @@ class ScanResultAdmin(admin.ModelAdmin):
 
 @admin.register(CG_System)
 class CGSystemAdmin(admin.ModelAdmin):
-    list_display = ('name', 'status', 'contested', 'caldari_objectives_advantage', 'gallente_objectives_advantage', 'caldari_systems_advantage', 'gallente_systems_advantage', 'last_updated')
+    list_display = ('name', 'status', 'contested', 'caldari_objectives_advantage', 'gallente_objectives_advantage', 'caldari_systems_advantage', 'gallente_systems_advantage','base_advantage', 'last_updated')
     search_fields = ('name', 'status')
     list_filter = ('status', 'last_updated')
     ordering = ('name',)
 
 @admin.register(AM_System)
 class AMSystemAdmin(admin.ModelAdmin):
-    list_display = ('name', 'status', 'contested', 'amarr_objectives_advantage', 'minmatar_objectives_advantage', 'amarr_systems_advantage', 'minmatar_systems_advantage', 'last_updated')
+    list_display = ('name', 'status', 'contested', 'amarr_objectives_advantage', 'minmatar_objectives_advantage', 'amarr_systems_advantage', 'minmatar_systems_advantage','base_advantage', 'last_updated')
     search_fields = ('name', 'status')
     list_filter = ('status', 'last_updated')
     ordering = ('name',)

@@ -48,7 +48,7 @@ def consume_web_data(data):
         else:
             ModelClass = AM_System
             field_map = {
-                'caldari_objectives_advantage': 'amarr_objectives_advantage',
+                'caldar_objectives_advantage': 'amarr_objectives_advantage',
                 'gallente_objectives_advantage': 'minmatar_objectives_advantage',
                 'caldari_systems_advantage': 'amarr_systems_advantage',
                 'gallente_systems_advantage': 'minmatar_systems_advantage'
@@ -58,11 +58,14 @@ def consume_web_data(data):
         defaults = {
             'status': system_data['status'],
             'contested': system_data['contested'],
-            field_map['caldari_objectives_advantage']: system_data.get('caldari_objectives_advantage', 0),
-            field_map['gallente_objectives_advantage']: system_data.get('gallente_objectives_advantage', 0),
-            field_map['caldari_systems_advantage']: system_data.get('caldari_systems_advantage', 0),
-            field_map['gallente_systems_advantage']: system_data.get('gallente_systems_advantage', 0),
+            'base_advantage': system_data['base_advantage'],
         }
+        # advanced_advantage = {
+        #     field_map['caldari_objectives_advantage']: system_data.get('caldari_objectives_advantage', 0),
+        #     field_map['gallente_objectives_advantage']: system_data.get('gallente_objectives_advantage', 0),
+        #     field_map['caldari_systems_advantage']: system_data.get('caldari_systems_advantage', 0),
+        #     field_map['gallente_systems_advantage']: system_data.get('gallente_systems_advantage', 0),
+        # }
 
         # Using get_or_create to either get an existing record or create a new one
         obj, created = ModelClass.objects.get_or_create(
@@ -70,6 +73,8 @@ def consume_web_data(data):
             defaults=defaults
         )
         if system_data["update_advantage"]:
+            # Advantage data is to be 
+
             for original_field, mapped_field in field_map.items():
                 if "objective" in original_field:
                     swing = update_advantage_in_redis(redis_client, system_data['system'], mapped_field, system_data)
@@ -113,12 +118,13 @@ def consume_web_data(data):
 
             if obj.contested != system_data['contested']:
                 update_data['contested'] = system_data['contested']
+            
+            if obj.contested != system_data['base_advantage']:
+                update_data['base_advantage'] = system_data['base_advantage']
 
             update_data['last_updated'] = completion_time  # Always update the last_updated field
 
-            # Perform the update only if there are changes
-            if update_data:
-                ModelClass.objects.filter(pk=obj.pk).update(**update_data)
+            ModelClass.objects.filter(pk=obj.pk).update(**update_data)
 
         results.append(f"System {'created' if created else 'updated'}: {obj.name}")
 

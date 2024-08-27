@@ -22,7 +22,7 @@ class System(models.Model):
     status = models.CharField(max_length=255, choices=SYSTEM_STATUS)
     contested = models.DecimalField(max_digits=5, decimal_places=2)
     last_updated = models.DateTimeField(auto_now=True) 
-    base_advantage = models.PositiveSmallIntegerField(blank=True)
+    base_advantage = models.PositiveSmallIntegerField(blank=False)
 
     class Meta:
         abstract = True
@@ -56,6 +56,7 @@ class Battlefield(Record):
     winner = models.CharField(max_length=10, choices=FACTION_CHOICES, blank=True)
     defender = models.CharField(max_length=10, choices=FACTION_CHOICES)
     system = models.CharField(max_length=100, blank=True)
+    fc = models.CharField(max_length=100, default=None, null=True)
 
     class Meta:
         abstract = True
@@ -75,7 +76,6 @@ class ScheduledBattlefield(Battlefield):
     battlefield_type = models.CharField(max_length=15, choices=TYPE_CHOICES, default='Normal')
     default_time = models.DateField(default=timezone.now)
     expected_time = models.DateTimeField(default=timezone.now)
-    fc = models.CharField(max_length=50, default=None, null=False)
     is_between_downtime_and_four_hours_after = models.BooleanField(editable=False, default=False)
     def save(self, *args, **kwargs):
         # Define the time range: 11:00 AM to 3:00 PM (4 hours after 11:00 AM)
@@ -94,7 +94,6 @@ class ScheduledBattlefield(Battlefield):
 # Derived class for live battlefields
 class LiveBattlefield(Battlefield):
     spawn_time = models.DateTimeField(default=timezone.now)
-    fc = models.CharField(max_length=10, default=None, null=True)
 
 # Class for storing scan results
 class ScanResult(Record):
