@@ -23,6 +23,7 @@ class System(models.Model):
     contested = models.DecimalField(max_digits=5, decimal_places=2)
     last_updated = models.DateTimeField(auto_now=True) 
     base_advantage = models.PositiveSmallIntegerField(blank=False)
+    defender = models.CharField(max_length=255, choices=FACTION_CHOICES, default="caldari")
 
     class Meta:
         abstract = True
@@ -56,7 +57,7 @@ class Battlefield(Record):
     winner = models.CharField(max_length=10, choices=FACTION_CHOICES, blank=True)
     defender = models.CharField(max_length=10, choices=FACTION_CHOICES)
     system = models.CharField(max_length=100, blank=True)
-    fc = models.CharField(max_length=100, default=None, blank=True)
+    fc = models.CharField(max_length=100, default=None, blank=True, null=True)
 
     class Meta:
         abstract = True

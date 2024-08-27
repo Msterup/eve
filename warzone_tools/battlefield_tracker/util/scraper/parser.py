@@ -60,6 +60,7 @@ def consume_web_data(data):
             'status': system_data['status'],
             'contested': system_data['contested'],
             'base_advantage': system_data['base_advantage'],
+            'defender': system_data['defender'],
         }
         # advanced_advantage = {
         #     field_map['caldari_objectives_advantage']: system_data.get('caldari_objectives_advantage', 0),
@@ -73,37 +74,38 @@ def consume_web_data(data):
             name=system_data['system'],
             defaults=defaults
         )
-        if system_data["update_advantage"]:
-            # Advantage data is to be 
+        if not created: # Ignore most work first time trough the database, to set up automatically
 
-            for original_field, mapped_field in field_map.items():
-                if "objective" in original_field:
-                    swing = update_advantage_in_redis(redis_client, system_data['system'], mapped_field, system_data)
-                    if swing > 3:
-                        if "caldari" in original_field:
-                            winner = 'caldari'
-                        elif "gallente" in original_field:
-                            winner = 'gallente'
-                        elif "amarr" in original_field:
-                            winner = 'amarr'
-                        else:
-                            winner = 'minmatar'
-                        
-                        BattlefieldCompletion.objects.create(
-                            completion_time=completion_time,
-                            winner=winner,
-                            defender=system_data['defender'],
-                            system=system_data['system']
-                        )
+            if system_data["update_advantage"]:
+                # Advantage data is to be 
 
-                        # Call the remove_oldest_live_battlefield function
-                        remove_result = remove_oldest_live_battlefield(defender=system_data["defender"])
-                        results.append(remove_result)
+                for original_field, mapped_field in field_map.items():
+                    if "objective" in original_field:
+                        swing = update_advantage_in_redis(redis_client, system_data['system'], mapped_field, system_data)
+                        if swing > 3:
+                            if "caldari" in original_field:
+                                winner = 'caldari'
+                            elif "gallente" in original_field:
+                                winner = 'gallente'
+                            elif "amarr" in original_field:
+                                winner = 'amarr'
+                            else:
+                                winner = 'minmatar'
+                            
+                            BattlefieldCompletion.objects.create(
+                                completion_time=completion_time,
+                                winner=winner,
+                                defender=system_data['defender'],
+                                system=system_data['system']
+                            )
 
-                        results.append(f"BattlefieldCompletion created for system {system_data['system']} with winner {winner}")
-                        results.append(f"Significant swing detected for {mapped_field}: {swing}")
+                            # Call the remove_oldest_live_battlefield function
+                            remove_result = remove_oldest_live_battlefield(defender=system_data["defender"])
+                            results.append(remove_result)
+
+                            results.append(f"BattlefieldCompletion created for system {system_data['system']} with winner {winner}")
+                            results.append(f"Significant swing detected for {mapped_field}: {swing}")
         
-        if not created:
             update_data = {}
 
             # Check and update each mapped field
@@ -113,6 +115,16 @@ def consume_web_data(data):
                 if current_value != new_value:
                     update_data[mapped_field] = new_value
 
+            if obj.defender != system_data['defender']:
+                update_data['defender'] = system_data['defender']
+                # defender changed, time to spawn a Live battle field with the old defender as defender
+                LiveBattlefield.objects.create(
+                    spawn_time=completion_time,
+                    defender=obj.defender
+                )
+
+            # TODO: replace this with the defaults above - why did I not to this originally?
+            # Make this whole thing more simple, no need for all this fancy
             # Check and update additional fields
             if obj.status != system_data['status']:
                 update_data['status'] = system_data['status']
@@ -120,9 +132,9 @@ def consume_web_data(data):
             if obj.contested != system_data['contested']:
                 update_data['contested'] = system_data['contested']
             
-            if obj.contested != system_data['base_advantage']:
+            if obj.base_advantage != system_data['base_advantage']:
                 update_data['base_advantage'] = system_data['base_advantage']
-
+            
             update_data['last_updated'] = completion_time  # Always update the last_updated field
 
             ModelClass.objects.filter(pk=obj.pk).update(**update_data)
