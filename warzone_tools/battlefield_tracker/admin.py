@@ -10,7 +10,7 @@ class BattlefieldCompletionAdmin(admin.ModelAdmin):
 
 @admin.register(ScheduledBattlefield)
 class ScheduledBattlefieldAdmin(admin.ModelAdmin):
-    list_display = ('system', 'expected_time', 'defender', 'fc')
+    list_display = ('system', 'expected_time', 'defender', 'fc', 'is_between_downtime_and_four_hours_after')
     ordering = ('-expected_time',)
 
 @admin.register(LiveBattlefield)

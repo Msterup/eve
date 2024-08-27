@@ -56,7 +56,7 @@ class Battlefield(Record):
     winner = models.CharField(max_length=10, choices=FACTION_CHOICES, blank=True)
     defender = models.CharField(max_length=10, choices=FACTION_CHOICES)
     system = models.CharField(max_length=100, blank=True)
-    fc = models.CharField(max_length=100, default=None, null=True)
+    fc = models.CharField(max_length=100, default=None, blank=True)
 
     class Meta:
         abstract = True

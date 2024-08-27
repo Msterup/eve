@@ -6,7 +6,6 @@ from django.utils import timezone
 # todo: add timed cache here 
 def get_battlefield_timers(faction):
 
-    faction = faction.capitalize()
     if faction in ['caldari', 'gallente']:
         faction_query = Q(defender='caldari') | Q(defender='gallente')
     elif faction in ['minmatar', 'amarr']:
@@ -36,14 +35,14 @@ def get_battlefield_timers(faction):
     all_battlefields = ScheduledBattlefield.objects.all().filter(
         faction_query,
         expected_time__gte=cutoff_time,
-        is_between_downtime_and_four_hours_after=True,
+        is_between_downtime_and_four_hours_after=False,
         ).order_by("-expected_time")
     
     scheduled_readable_battlefields = []
     for battlefield_data in all_battlefields:
         battlefield = {}
         battlefield["expected_time"] = battlefield_data.expected_time.strftime('%Y-%m-%d %H:%M:%S')
-        battlefield["defender"] = battlefield_data.defender
+        battlefield["defender"] = battlefield_data.defender.capitalize()
         battlefield["fc"] = battlefield_data.fc
         battlefield["battlefield_type"] = battlefield_data.battlefield_type
         scheduled_readable_battlefields.append(battlefield)
