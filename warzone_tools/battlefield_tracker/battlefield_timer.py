@@ -36,7 +36,7 @@ def get_battlefield_timers(faction):
         faction_query,
         expected_time__gte=cutoff_time,
         is_between_downtime_and_four_hours_after=False,
-        ).order_by("-expected_time")
+        ).order_by("expected_time")
     
     scheduled_readable_battlefields = []
     for battlefield_data in all_battlefields:
@@ -55,7 +55,7 @@ def get_battlefield_timers(faction):
     for battlefield_data in all_battlefields:
         battlefield = {}
         battlefield["spawn_time"] = battlefield_data.spawn_time.strftime('%Y-%m-%d %H:%M:%S')
-        battlefield["defender"] = battlefield_data.defender
+        battlefield["defender"] = battlefield_data.defender.capitalize()
         battlefield["fc"] = battlefield_data.fc
         live_readable_battlefields.append(battlefield)
 

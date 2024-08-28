@@ -82,7 +82,7 @@ def consume_web_data(data):
                 for original_field, mapped_field in field_map.items():
                     if "objective" in original_field:
                         swing = update_advantage_in_redis(redis_client, system_data['system'], mapped_field, system_data)
-                        if swing > 3:
+                        if swing > 6:
                             if "caldari" in original_field:
                                 winner = 'caldari'
                             elif "gallente" in original_field:

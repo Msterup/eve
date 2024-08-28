@@ -29,16 +29,16 @@ class System(models.Model):
         abstract = True
 
 class CG_System(System):
-    caldari_objectives_advantage = models.PositiveSmallIntegerField(blank=True)
-    gallente_objectives_advantage = models.PositiveSmallIntegerField(blank=True)
-    caldari_systems_advantage = models.PositiveSmallIntegerField(blank=True)
-    gallente_systems_advantage = models.PositiveSmallIntegerField(blank=True)
+    caldari_objectives_advantage = models.PositiveSmallIntegerField(blank=True, null=True)
+    gallente_objectives_advantage = models.PositiveSmallIntegerField(blank=True, null=True)
+    caldari_systems_advantage = models.PositiveSmallIntegerField(blank=True, null=True)
+    gallente_systems_advantage = models.PositiveSmallIntegerField(blank=True, null=True)
 
 class AM_System(System):
-    amarr_objectives_advantage = models.PositiveSmallIntegerField(blank=True)
-    minmatar_objectives_advantage = models.PositiveSmallIntegerField(blank=True)
-    amarr_systems_advantage = models.PositiveSmallIntegerField(blank=True)
-    minmatar_systems_advantage = models.PositiveSmallIntegerField(blank=True)
+    amarr_objectives_advantage = models.PositiveSmallIntegerField(blank=True, null=True)
+    minmatar_objectives_advantage = models.PositiveSmallIntegerField(blank=True, null=True)
+    amarr_systems_advantage = models.PositiveSmallIntegerField(blank=True, null=True)
+    minmatar_systems_advantage = models.PositiveSmallIntegerField(blank=True, null=True)
 
 # Base class for all models that require the delete_old_records method
 class Record(models.Model):

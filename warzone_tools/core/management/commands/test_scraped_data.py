@@ -12,7 +12,7 @@ class Command(BaseCommand):
     help = "Add a test battlefield completion"
 
     def handle(self, *args, **options):
-        system_data = {'status': 'Frontline', 'system': 'Nennamaila', 'defender': 'caldari', 'contested': '65.04', 'base_advantage': '6', 'update_advantage': True, 'gallente_objectives_advantage': 95, 'attacker': 'gallente', 'gallente_systems_advantage': 10, 'caldari_objectives_advantage': 59, 'caldari_systems_advantage': 40}
+        system_data = {'status': 'Frontline', 'system': 'Nennamaila', 'defender': 'caldari', 'contested': '65.04', 'base_advantage': '6', 'update_advantage': True, 'gallente_objectives_advantage': 95, 'attacker': 'gallente', 'gallente_systems_advantage': 10, 'caldari_objectives_advantage': 49, 'caldari_systems_advantage': 40}
         data = {'Nennamaila': system_data,
                 'faction': 'caldari',
                 'timestamp': datetime.now().isoformat()}
