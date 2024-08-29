@@ -4,15 +4,15 @@ from django.shortcuts import render
 
 from django.http import HttpResponse
 from django.template import loader
-from battlefield_tracker.battlefield_timer import get_battlefield_timers
+from eve_tools.templates.pages.tracker.battlefield_timer import get_battlefield_timers
 
 def index(request, faction="caldari"):
-    return battlefield_tracker(request, faction)
+    return tracker(request, faction)
 
-def battlefield_tracker(request, faction: str):
+def tracker(request, faction: str):
     context = get_battlefield_timers(faction)
     context["faction"] = faction.capitalize()
-    return render(request, "index/index.html", context)
+    return render(request, "pages/tracker/tracker.html", context)
 
 def battlefield_base(request):
     context = None

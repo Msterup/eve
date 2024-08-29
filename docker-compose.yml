@@ -23,7 +23,6 @@ services:
       - redis
     networks:
       - backend
-    cpuset: "0"
 
   redis:
     image: redis:latest
@@ -32,9 +31,8 @@ services:
       - "6379:6379"
     networks:
       - backend
-    cpuset: "0"
 
-  rqworker-1:
+  rqworker:
     image: warzone_tools:latest
     build:
       context: .
@@ -49,41 +47,6 @@ services:
     networks:
       - backend
       - frontend
-    cpuset: "1"
-
-  rqworker-2:
-    image: warzone_tools:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: python manage.py rqworker default
-    volumes:
-      - ./warzone_tools:/warzone_tools
-    environment:
-      - RQ_REDIS_URL=redis://redis:6379/0
-    depends_on:
-      - redis
-    networks:
-      - backend
-      - frontend
-    cpuset: "2"
-
-  rqworker-3:
-    image: warzone_tools:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: python manage.py rqworker default
-    volumes:
-      - ./warzone_tools:/warzone_tools
-    environment:
-      - RQ_REDIS_URL=redis://redis:6379/0
-    depends_on:
-      - redis
-    networks:
-      - backend
-      - frontend
-    cpuset: "3"
 
   rqscheduler:
     image: warzone_tools:latest
@@ -99,7 +62,6 @@ services:
       - redis
     networks:
       - backend
-    cpuset: "0"
 
   nginx:
     build:
@@ -119,7 +81,6 @@ services:
     networks:
       - frontend
       - backend
-    cpuset: "0"
 
 networks:
   backend:

@@ -1,4 +1,4 @@
-{% extends 'battlefield_base.html' %}
+{% extends 'eve_tools_base.html' %}
 
 {% block battlefield_content %}
 <!--TODO: Fix timecodes are not the same width-->
@@ -6,10 +6,10 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <!-- Faction Buttons -->
         <nav class="nav nav-pills">
-            <a class="nav-link {% if faction == 'caldari' %}active{% endif %}" href="{% url 'battlefield_tracker:battlefields_tracker' faction='caldari' %}">Caldari Battlefields</a>
-            <a class="nav-link {% if faction == 'gallente' %}active{% endif %}" href="{% url 'battlefield_tracker:battlefields_tracker' faction='gallente' %}">Gallente Battlefields</a>
-            <a class="nav-link {% if faction == 'minmatar' %}active{% endif %}" href="{% url 'battlefield_tracker:battlefields_tracker' faction='minmatar' %}">Minmatar Battlefields</a>
-            <a class="nav-link {% if faction == 'amarr' %}active{% endif %}" href="{% url 'battlefield_tracker:battlefields_tracker' faction='amarr' %}">Amarr Battlefields</a>
+            <a class="nav-link {% if faction == 'caldari' %}active{% endif %}" href="{% url 'eve_tools:battlefields_tracker' faction='caldari' %}">Caldari Battlefields</a>
+            <a class="nav-link {% if faction == 'gallente' %}active{% endif %}" href="{% url 'eve_tools:battlefields_tracker' faction='gallente' %}">Gallente Battlefields</a>
+            <a class="nav-link {% if faction == 'minmatar' %}active{% endif %}" href="{% url 'eve_tools:battlefields_tracker' faction='minmatar' %}">Minmatar Battlefields</a>
+            <a class="nav-link {% if faction == 'amarr' %}active{% endif %}" href="{% url 'eve_tools:battlefields_tracker' faction='amarr' %}">Amarr Battlefields</a>
         </nav>
         <!-- Toggle Local Time Button -->
         <div class="text-end">

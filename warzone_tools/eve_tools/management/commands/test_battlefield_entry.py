@@ -1,6 +1,6 @@
 
 from django.core.management.base import BaseCommand
-from battlefield_tracker.models import BattlefieldCompletion
+from eve_tools.models import BattlefieldCompletion
 
 class Command(BaseCommand):
     help = "Add a test battlefield completion"

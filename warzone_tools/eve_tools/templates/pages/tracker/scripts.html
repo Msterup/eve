@@ -1,0 +1,95 @@
+<script>
+    // Function to set the button text based on the current state
+    function setButtonText(button) {
+        const isShowingLocalTime = button.getAttribute('data-showing-local') === 'true';
+        if (isShowingLocalTime) {
+            button.innerText = 'Show Eve Time (UTC+0)';
+        } else {
+            button.innerText = `Show Local Time (${Intl.DateTimeFormat().resolvedOptions().timeZone})`;
+        }
+    }
+
+    // Function to get the UTC offset in hours and minutes
+    function getUTCOffset(date) {
+        const offset = date.getTimezoneOffset();
+        const sign = offset <= 0 ? "+" : "-";
+        const absOffset = Math.abs(offset);
+        const hours = String(Math.floor(absOffset / 60)).padStart(2, '0');
+        const minutes = String(absOffset % 60).padStart(2, '0');
+        return `UTC${sign}${hours}:${minutes}`;
+    }
+
+    // Function to convert server time to local time string
+    function local_time_string(span) {
+        const serverTime = span.getAttribute('data-time');
+        const date = new Date(serverTime);
+        const localTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const localTime = date.toLocaleString();
+        const utcOffset = getUTCOffset(date);
+        return `${localTimezone}: ${localTime} ${utcOffset}`;
+    }
+
+    // Function to toggle the time display between Eve Time and Local Time
+    function toggleTime(button) {
+        const serverTimes = document.querySelectorAll('.server-time');
+        const isShowingLocalTime = button.getAttribute('data-showing-local') === 'true';
+
+        serverTimes.forEach((span) => {
+            if (isShowingLocalTime) {
+                // Switch to showing server time
+                const serverTime = span.getAttribute('data-time');
+                const date = new Date(serverTime);
+                span.innerText = `Eve time: ${date.toISOString().replace('T', ' ').split('.')[0]} UTC`;
+            } else {
+                // Switch to showing local time with UTC offset
+                span.innerText = local_time_string(span);
+            }
+        });
+
+        // Toggle the state for the next click
+        button.setAttribute('data-showing-local', !isShowingLocalTime);
+
+        // Update button text
+        setButtonText(button);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const button = document.getElementById('toggleTimeButton');
+        
+        // Set initial button text
+        setButtonText(button);
+
+        // Event listener for toggling time
+        button.addEventListener('click', function() {
+            toggleTime(button);
+        });
+
+        function updateCountdown(span, targetTime) {
+            const now = new Date();
+            const timeDiff = targetTime - now;
+
+            if (timeDiff <= 0) {
+                span.innerText = "Battlefield has started";
+                return;
+            }
+
+            const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+            span.innerText = `${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        function updateCountdowns() {
+            const countdowns = document.querySelectorAll('.countdown');
+            countdowns.forEach((span) => {
+                const serverTime = new Date(span.getAttribute('data-time'));
+                updateCountdown(span, serverTime);
+            });
+        }
+
+        // Initial countdown update and interval setup
+        updateCountdowns();
+        setInterval(updateCountdowns, 1000); // Update countdowns every second
+    });
+</script>

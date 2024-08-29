@@ -20,8 +20,8 @@ from core import views
 
 urlpatterns = [
     path("", views.home, name="home"),
-    path('battlefield-tracker/', include('battlefield_tracker.urls')),  # Include the app's URLs
     path('contact/', views.contact, name='contact'),
     path("admin/", admin.site.urls),
+    path('eve_tools/', include('eve_tools.urls')),
     path('django-rq/', include('django_rq.urls')),
 ]

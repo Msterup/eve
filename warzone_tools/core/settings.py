@@ -50,7 +50,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 INSTALLED_APPS = [
     'core',
-    'battlefield_tracker',
+    'eve_tools',
     'django_rq',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -89,7 +89,7 @@ import os
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, "battlefield_tracker", "templates")],
+        'DIRS': [os.path.join(BASE_DIR, "eve_tools", "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

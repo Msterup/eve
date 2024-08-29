@@ -1,12 +1,12 @@
 
 
-from battlefield_tracker.util.scraper.parser import consume_web_data
+from warzone_tools.eve_tools.util.parser import consume_web_data
 from datetime import datetime
 
 
 
 from django.core.management.base import BaseCommand
-from battlefield_tracker.models import BattlefieldCompletion
+from eve_tools.models import BattlefieldCompletion
 
 class Command(BaseCommand):
     help = "Add a test battlefield completion"

@@ -1,0 +1,28 @@
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Live battlefields:</h5>
+        <p class="card-text">This section should prompt the user to fleet up and play EVE Online.</p>
+        {% if live_battlefields %}
+            <div class="list-group list-group-flush">
+                {% for battlefield in live_battlefields %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong>{{ battlefield.defender }} Defensive Battlefield</strong>
+                            <!-- Time Display -->
+                            <small class="text-muted server-time" data-time="{{ battlefield.spawn_time }}" data-timezone="UTC+0">Eve time: {{ battlefield.spawn_time }}</small>
+                        </div>
+                        <div class="mt-2">
+                            {% if battlefield.fc %}
+                                <span class="text-success">FC: {{ battlefield.fc }} has signed up to run a fleet for this objective.</span>
+                            {% else %}
+                                <span class="text-danger">No FC has signed up yet for this objective.</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No live battlefields at the moment.</p>
+        {% endif %}
+    </div>
+</div>
