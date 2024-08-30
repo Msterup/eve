@@ -1,0 +1,27 @@
+{% if advantage_warnings %}
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Warnings:</h5>
+        <p class="card-text">Due to how data is collected, if a faction has 95% or above advantage, the system is unable to detect battlefield completions. 
+            <br>
+            This may lead to completions going unreported, and live battlefields failing to delete.</p>
+            <div class="list-group list-group-flush">
+                {% for warning in advantage_warnings %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <span class="badge rounded-pill bg-warning me-2">
+                                    Extreme advantage
+                                </span>
+                                <strong>{{ warning.system }} has extreme {{ warning.faction}} advantage</strong>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            No additional information to report
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+    </div>
+</div>
+{% endif %}

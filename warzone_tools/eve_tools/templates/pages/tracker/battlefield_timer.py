@@ -4,7 +4,7 @@ if __name__ == "__main__": # for local debug
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
     django.setup()
 
-from eve_tools.models import BattlefieldCompletion, ScheduledBattlefield
+from eve_tools.models import BattlefieldCompletion, ScheduledBattlefield, SolarSystem, FactionAdvantage
 from datetime import timedelta
 from django.db.models import Q
 from django.utils import timezone
@@ -22,6 +22,26 @@ def get_battlefield_timers(faction):
         faction_query = Q(defender__in=[500002, 500003])
 
     result = {}
+    faction_id_query = Q()
+    if faction in ['caldari', 'gallente']:
+        faction_id_query = Q(faction_id__in=[500001, 500004])
+    elif faction in ['minmatar', 'amarr']:
+        faction_id_query = Q(faction_id__in=[500002, 500003])
+    #TODO: make faction_id and faction the same thing
+
+    # Query for frontline systems with a FactionAdvantage of 95 or above
+    advantages = FactionAdvantage.objects.filter(
+        total_amount__gte=95
+    ).filter(faction_id_query)
+    
+    advantage_warnings = []
+    for advantage in advantages:
+        warning = {
+            "faction": translate_faction_id(advantage.faction_id),
+            "system": translate_system_id(advantage.solar_system.solarsystem_id),
+        }
+        advantage_warnings.append(warning)
+    result["advantage_warnings"] = advantage_warnings
 
     # Historic battlefields
     all_battlefields = BattlefieldCompletion.objects.filter(faction_query).order_by("-completion_time")
@@ -81,4 +101,4 @@ def translate_system_id(system_id):
     return EveIDTranslator.translate_id(system_id)
 
 if __name__ == "__main__":
-    result = get_battlefield_timers("minmatar")
+    result = get_battlefield_timers("caldari")

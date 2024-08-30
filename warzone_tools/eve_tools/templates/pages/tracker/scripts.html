@@ -97,7 +97,7 @@ function updateCountup(span, startTime) {
 
     // Optional: Add more formatting based on the time elapsed
     if (hours === 0 && minutes === 0) {
-        prettyString = `+${formattedSeconds}s since start`;
+        prettyString = `${formattedSeconds}s since start`;
     } else if (hours === 0) {
         prettyString = `${formattedMinutes}m ${formattedSeconds}s since start`;
     }
