@@ -13,11 +13,3 @@ def tracker(request, faction: str):
     context = get_battlefield_timers(faction)
     context["faction"] = faction.capitalize()
     return render(request, "pages/tracker/tracker.html", context)
-
-def battlefield_base(request):
-    context = None
-    return render(request, "battlefield_base.html", context)
-
-def scan_logs(request):
-    context = None
-    return render(request, "scan_logs.html", context)

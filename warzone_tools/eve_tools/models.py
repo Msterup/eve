@@ -54,13 +54,17 @@ class FactionAdvantage(models.Model):
         if self.pk:  # Check if this is an update (existing record)
             previous = FactionAdvantage.objects.get(pk=self.pk)
             delta_fields = {}
-            # Calculate the changes (deltas)
-            if previous.terrain_amount != self.terrain_amount:
-                delta_fields['terrain_amount'] = self.terrain_amount - previous.terrain_amount
-            if previous.dynamic_amount != self.dynamic_amount:
-                delta_fields['dynamic_amount'] = self.dynamic_amount - previous.dynamic_amount
-            if previous.total_amount != self.total_amount:
-                delta_fields['total_amount'] = self.total_amount - previous.total_amount
+            
+            def calculate_delta(field_name):
+                previous_value = getattr(previous, field_name)
+                current_value = getattr(self, field_name)
+                if previous_value != current_value:
+                    delta_fields[field_name] = (current_value or 0) - (previous_value or 0)
+
+            # Apply the delta calculation to each field
+            calculate_delta('terrain_amount')
+            calculate_delta('dynamic_amount')
+            calculate_delta('total_amount')
             
             if delta_fields:
                 delta = FactionAdvantageDelta.objects.create(
