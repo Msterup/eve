@@ -12,7 +12,10 @@
                     </div>
                     <div class="mt-2">
                         {{ battlefield.winner }} won a battlefield in {{ battlefield.system }}. <br>
-                        {{ battlefield.defender }} will defend at {{ battlefield.spawn_time }}.
+                        {{ battlefield.defender }} will defend at 
+                        <span class="server-time" data-time="{{ battlefield.spawn_time }}">
+                          {{ battlefield.spawn_time }}
+                        </span>
                     </div>
                 </div>
             {% endfor %}

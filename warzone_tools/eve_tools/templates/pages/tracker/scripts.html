@@ -1,86 +1,124 @@
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const button = document.getElementById('toggleTimeButton');
-        
-        // Set initial button text
-        setButtonText(button);
+document.addEventListener('DOMContentLoaded', function() {
+    const button = document.getElementById('toggleTimeButton');
+    
+    // Set initial button text
+    setButtonText(button);
 
-        // Event listener for toggling time
-        button.addEventListener('click', function() {
-            toggleTime(button);
-        });
-
-        // Initial countdown update and interval setup
-        updateCountdowns();
-        setInterval(updateCountdowns, 1000); // Update countdowns every second
+    // Event listener for toggling time
+    button.addEventListener('click', function() {
+        toggleTime(button);
     });
 
-    // Function to set the button text based on the current state
-    function setButtonText(button) {
-        const isShowingLocalTime = button.getAttribute('data-showing-local') === 'true';
+    // Initial countdown update and interval setup
+    updateTimes();  // Make sure this calls updateTimes
+    setInterval(updateTimes, 1000); // Update countdowns and countups every second
+});
+
+// Function to set the button text based on the current state
+function setButtonText(button) {
+    const isShowingLocalTime = button.getAttribute('data-showing-local') === 'true';
+    if (isShowingLocalTime) {
+        button.innerText = 'Show Eve Time (UTC+0)';
+    } else {
+        button.innerText = `Show Local Time (${Intl.DateTimeFormat().resolvedOptions().timeZone})`;
+    }
+}
+
+// Function to convert server time to local time string
+function localTimeString(span) {
+    const serverTime = span.getAttribute('data-time');
+    const date = new Date(Date.parse(serverTime + 'Z'));  // Parse time as UTC
+    const localTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const localTime = date.toLocaleString();  // Convert to local time string
+    return `${localTimezone}: ${localTime}`;
+}
+
+// Function to toggle the time display between Eve Time and Local Time
+function toggleTime(button) {
+    const serverTimes = document.querySelectorAll('.server-time');
+    const isShowingLocalTime = button.getAttribute('data-showing-local') === 'true';
+
+    serverTimes.forEach((span) => {
         if (isShowingLocalTime) {
-            button.innerText = 'Show Eve Time (UTC+0)';
+            // Switch to showing server time in UTC
+            const serverTime = span.getAttribute('data-time');
+            const date = new Date(Date.parse(serverTime + 'Z'));  // Parse as UTC
+            span.innerText = `Eve time: ${date.toISOString().replace('T', ' ').split('.')[0]} UTC`;
         } else {
-            button.innerText = `Show Local Time (${Intl.DateTimeFormat().resolvedOptions().timeZone})`;
+            // Switch to showing local time
+            span.innerText = localTimeString(span);
         }
+    });
+
+    // Toggle the state for the next click
+    button.setAttribute('data-showing-local', !isShowingLocalTime);
+
+    // Update button text
+    setButtonText(button);
+}
+
+// Function to update countdown for a specific span
+function updateCountdown(span, targetTime) {
+    const now = new Date();
+    const timeDiff = targetTime - now;
+
+    if (timeDiff <= 0) {
+        span.innerText = "Battlefield has started";
+        return;
     }
 
-    // Function to convert server time to local time string
-    function localTimeString(span) {
-        const serverTime = span.getAttribute('data-time');
-        const date = new Date(Date.parse(serverTime + 'Z'));  // Parse time as UTC
-        const localTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        const localTime = date.toLocaleString();  // Convert to local time string
-        return `${localTimezone}: ${localTime}`;
+    const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+    span.innerText = `${hours}h ${minutes}m ${seconds}s`;
+}
+
+function updateCountup(span, startTime) {
+    const now = new Date();
+    const timeDiff = now - startTime; // Now subtracts the startTime
+
+    if (timeDiff < 0) {
+        span.innerText = "Counting up not started";
+        return;
     }
 
-    // Function to toggle the time display between Eve Time and Local Time
-    function toggleTime(button) {
-        const serverTimes = document.querySelectorAll('.server-time');
-        const isShowingLocalTime = button.getAttribute('data-showing-local') === 'true';
+    const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
 
-        serverTimes.forEach((span) => {
-            if (isShowingLocalTime) {
-                // Switch to showing server time in UTC
-                const serverTime = span.getAttribute('data-time');
-                const date = new Date(Date.parse(serverTime + 'Z'));  // Parse as UTC
-                span.innerText = `Eve time: ${date.toISOString().replace('T', ' ').split('.')[0]} UTC`;
-            } else {
-                // Switch to showing local time
-                span.innerText = localTimeString(span);
-            }
-        });
+    // Add leading zeros to minutes and seconds
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+    const formattedSeconds = seconds.toString().padStart(2, '0');
 
-        // Toggle the state for the next click
-        button.setAttribute('data-showing-local', !isShowingLocalTime);
+    // Construct a prettier string
+    let prettyString = `+${hours}h ${formattedMinutes}m ${formattedSeconds}s since start`;
 
-        // Update button text
-        setButtonText(button);
+    // Optional: Add more formatting based on the time elapsed
+    if (hours === 0 && minutes === 0) {
+        prettyString = `+${formattedSeconds}s since start`;
+    } else if (hours === 0) {
+        prettyString = `${formattedMinutes}m ${formattedSeconds}s since start`;
     }
 
-    // Function to update countdown for a specific span
-    function updateCountdown(span, targetTime) {
-        const now = new Date();
-        const timeDiff = targetTime - now;
+    span.innerText = prettyString;
+}
 
-        if (timeDiff <= 0) {
-            span.innerText = "Battlefield has started";
-            return;
-        }
+// Function to update all countdowns and countups on the page
+function updateTimes() {
+    const countdowns = document.querySelectorAll('.countdown');
+    countdowns.forEach((span) => {
+        const targetTime = new Date(Date.parse(span.getAttribute('data-time') + 'Z'));  // Parse as UTC
+        updateCountdown(span, targetTime);
+    });
 
-        const hours = Math.floor(timeDiff / (1000 * 60 * 60));
-        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+    const countups = document.querySelectorAll('.countup');
+    countups.forEach((span) => {
+        const startTime = new Date(Date.parse(span.getAttribute('data-time') + 'Z'));  // Parse as UTC
+        updateCountup(span, startTime);
+    });
+}
 
-        span.innerText = `${hours}h ${minutes}m ${seconds}s`;
-    }
-
-    // Function to update all countdowns on the page
-    function updateCountdowns() {
-        const countdowns = document.querySelectorAll('.countdown');
-        countdowns.forEach((span) => {
-            const serverTime = new Date(Date.parse(span.getAttribute('data-time') + 'Z'));  // Parse as UTC
-            updateCountdown(span, serverTime);
-        });
-    }
 </script>
+

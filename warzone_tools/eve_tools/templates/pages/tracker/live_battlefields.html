@@ -7,9 +7,27 @@
                 {% for battlefield in live_battlefields %}
                     <div class="list-group-item">
                         <div class="d-flex justify-content-between align-items-center">
-                            <strong>{{ battlefield.defender }} Defensive Battlefield</strong>
+                            <div class="d-flex align-items-center">
+                                <span class="badge rounded-pill
+                                    {% if battlefield.type == 'Downtime' %}
+                                        bg-warning
+                                    {% elif battlefield.type == 'Normal' %}
+                                        bg-success
+                                    {% elif battlefield.type == 'System Flipped' %}
+                                        bg-danger
+                                    {% else %}
+                                        bg-secondary
+                                    {% endif %}
+                                    me-2">{{ battlefield.battlefield_type }}
+                                </span>
+                                <strong>{{ battlefield.defender }} defensive battlefield</strong>
+                            </div>
                             <!-- Time Display -->
-                            <small class="text-muted server-time" data-time="{{ battlefield.spawn_time }}" data-timezone="UTC+0">Eve time: {{ battlefield.spawn_time }}</small>
+                            <small class="text-muted server-time" data-time="{{ battlefield.expected_time }}" data-timezone="UTC+0">Eve time: {{ battlefield.expected_time }}</small>
+                        </div>
+                        <div class="mt-2">
+                            <span class="text-muted">Uptime: </span>
+                            <span class="countup" data-time="{{ battlefield.expected_time }}"></span>
                         </div>
                         <div class="mt-2">
                             {% if battlefield.fc %}
