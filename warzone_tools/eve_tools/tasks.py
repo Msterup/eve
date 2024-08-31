@@ -16,7 +16,8 @@ def create_downtime_scheduled_battlefields():
         create_scheduled_battlefield(
             defender_faction_id=defender,
             battlefield_type='Downtime',  # Since the system's occupier changed
-            fc_name=None  # Or use actual FC name if available
+            fc_name=None,  # Or use actual FC name if available
+            is_between_downtime_and_four_hours_after=False,
         )
 
 def delete_non_downtime_battlefields():

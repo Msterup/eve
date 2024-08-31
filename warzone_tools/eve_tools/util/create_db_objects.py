@@ -20,7 +20,7 @@ def create_battlefield_completion(solar_system, winner_faction_id, defender_fact
         completion_time=timezone.now(),
     )
 
-def create_scheduled_battlefield(defender_faction_id, battlefield_type='Normal', fc_name=None, expected_time=None):
+def create_scheduled_battlefield(defender_faction_id, battlefield_type='Normal', fc_name=None, expected_time=None, is_between_downtime_and_four_hours_after=None):
     """
     Creates a ScheduledBattlefield record.
     
@@ -41,7 +41,8 @@ def create_scheduled_battlefield(defender_faction_id, battlefield_type='Normal',
     expected_time_time = expected_time.time()
 
     # Set is_between_downtime_and_four_hours_after to True if within the range
-    is_between_downtime_and_four_hours_after = start_time <= expected_time_time <= end_time
+    if is_between_downtime_and_four_hours_after is None:
+        is_between_downtime_and_four_hours_after = start_time <= expected_time_time <= end_time
 
     ScheduledBattlefield.objects.create(
         defender=defender_faction_id,
