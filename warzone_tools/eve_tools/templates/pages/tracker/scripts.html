@@ -93,7 +93,7 @@ function updateCountup(span, startTime) {
     const formattedSeconds = seconds.toString().padStart(2, '0');
 
     // Construct a prettier string
-    let prettyString = `+${hours}h ${formattedMinutes}m ${formattedSeconds}s since start`;
+    let prettyString = `${hours}h ${formattedMinutes}m ${formattedSeconds}s since start`;
 
     // Optional: Add more formatting based on the time elapsed
     if (hours === 0 && minutes === 0) {

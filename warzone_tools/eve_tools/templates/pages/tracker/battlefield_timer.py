@@ -81,7 +81,7 @@ def get_battlefield_timers(faction):
     live_readable_battlefields = []
     for battlefield_data in all_battlefields:
         battlefield = {
-            "expected_time": battlefield_data.spawn_time.strftime('%Y-%m-%d %H:%M:%S'),
+            "expected_time": battlefield_data.expected_time.strftime('%Y-%m-%d %H:%M:%S'),
             "battlefield_type": battlefield_data.battlefield_type,
             "defender": translate_faction_id(battlefield_data.defender),
             "fc": battlefield_data.fc,
