@@ -25,5 +25,3 @@ def delete_non_downtime_battlefields():
     Deletes all ScheduledBattlefield records that are not of type 'Downtime'.
     """
     ScheduledBattlefield.objects.filter(~models.Q(battlefield_type='Downtime')).delete()
-
-    

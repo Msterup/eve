@@ -131,7 +131,7 @@ class ScheduledBattlefield(models.Model):
     fc = models.CharField(max_length=100, default=None, blank=True, null=True)
     spawn_time = models.DateTimeField(default=timezone.now) # Aka report time
     expected_time = models.DateTimeField(default=timezone.now)
-    is_between_downtime_and_four_hours_after = models.BooleanField(editable=False, default=False)
+    is_between_downtime_and_four_hours_after = models.BooleanField(editable=True, default=False)
 
     def delete_old_records(cls, days=3):
         """Delete records older than the specified number of days."""

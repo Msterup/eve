@@ -24,7 +24,7 @@ class Command(BaseCommand):
         )
         
         scheduler.cron(
-            cron_string='0 9 * * *',
+            cron_string='0 7 * * *',
             func=create_downtime_scheduled_battlefields,
             repeat=None,  # Run indefinitely
             timeout=600,
