@@ -60,12 +60,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD', None)
+
 RQ_QUEUES = {
     'default': {
         'HOST': 'redis',
         'PORT': 6379,
         'DB': 0,
         'DEFAULT_TIMEOUT': 360,
+        'PASSWORD': REDIS_PASSWORD,
     },
 }
 

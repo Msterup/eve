@@ -23,6 +23,7 @@ RUN tar -xzf geckodriver-v0.35.0-linux64.tar.gz \
 
 ENV MOZ_HEADLESS=1
 
+COPY .env /
 COPY requirements.txt /warzone_tools/
 RUN pip3 install -r requirements.txt
 

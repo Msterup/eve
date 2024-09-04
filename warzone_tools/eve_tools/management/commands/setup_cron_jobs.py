@@ -4,12 +4,14 @@ from rq_scheduler import Scheduler
 from redis import Redis
 from eve_tools.tasks import report_completed_battlefields, create_downtime_scheduled_battlefields, delete_non_downtime_battlefields
 from datetime import timedelta
+from django.conf import settings
 
 class Command(BaseCommand):
     help = 'Setup RQ Scheduler cron jobs'
 
     def handle(self, *args, **options):
-        scheduler = Scheduler(connection=Redis(host="redis"))
+        REDIS_PASSWORD = settings.REDIS_PASSWORD
+        scheduler = Scheduler(connection=Redis(host="redis", password=REDIS_PASSWORD))
         
         # Clear existing jobs to avoid duplication
         for job in scheduler.get_jobs():

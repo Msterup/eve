@@ -17,8 +17,10 @@ services:
       - ./warzone_tools/static:/app/static
       - ./warzone_tools/staticfiles:/app/staticfiles
     environment:
-      - DEBUG=False
       - RQ_REDIS_URL=redis://redis:6379/0
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - DEBUG=${DJANGO_DEBUG}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     depends_on:
       - redis
     networks:
@@ -31,14 +33,15 @@ services:
       - "6379:6379"
     networks:
       - backend
-    command: ["redis-server", "--appendonly", "yes"] # This runs Redis with a default configuration and append-only mode.
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}"] # This runs Redis with a default configuration and append-only mode.
     volumes:
       - ./redis-data:/data # Persist data to a directory on the host
     environment:
-      - ALLOW_EMPTY_PASSWORD=yes # Optional: Prevent Redis from requiring a password
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
 
   rqworker:
     image: warzone_tools:latest
+    container_name: rqworker
     build:
       context: .
       dockerfile: Dockerfile
@@ -47,6 +50,7 @@ services:
       - ./warzone_tools:/warzone_tools
     environment:
       - RQ_REDIS_URL=redis://redis:6379/0
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     depends_on:
       - redis
     networks:
@@ -55,6 +59,7 @@ services:
 
   rqscheduler:
     image: warzone_tools:latest
+    container_name: rqscheduler
     build:
       context: .
       dockerfile: Dockerfile
@@ -63,6 +68,7 @@ services:
       - ./warzone_tools:/warzone_tools
     environment:
       - RQ_REDIS_URL=redis://redis:6379/0
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     depends_on:
       - redis
     networks:
