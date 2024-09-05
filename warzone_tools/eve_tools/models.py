@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from datetime import time
+from django.contrib.auth.models import User
 # Create your models here.
 
 from django.db import models
@@ -128,7 +129,8 @@ class ScheduledBattlefield(models.Model):
     ]
     battlefield_type = models.CharField(max_length=15, choices=TYPE_CHOICES, default='Normal')
     defender = models.PositiveIntegerField()
-    fc = models.CharField(max_length=100, default=None, blank=True, null=True)
+    fc = models.ForeignKey(User, related_name='battlefields_as_fc', on_delete=models.SET_NULL, null=True, blank=True)  # FC field is now a reference to a User
+    participants = models.ManyToManyField(User, related_name='battlefields_as_participant', blank=True)  # Participants
     spawn_time = models.DateTimeField(default=timezone.now) # Aka report time
     expected_time = models.DateTimeField(default=timezone.now)
     is_between_downtime_and_four_hours_after = models.BooleanField(editable=True, default=False)

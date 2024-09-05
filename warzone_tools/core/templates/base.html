@@ -11,7 +11,8 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body class="d-flex flex-column min-vh-100"></body>
-    {% include 'navbar.html' %}
+    {% block navbar %}
+    {% endblock %}
     <main class="pt-4">
         <div class="container">
                 {% block content %}

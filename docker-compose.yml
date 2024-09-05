@@ -21,6 +21,8 @@ services:
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - DEBUG=${DJANGO_DEBUG}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - EVE_CLIENT_ID=${EVE_CLIENT_ID}
+      - EVE_SECRET_KEY=${EVE_SECRET_KEY}
     depends_on:
       - redis
     networks:

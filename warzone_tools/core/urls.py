@@ -24,4 +24,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('eve_tools/', include('eve_tools.urls')),
     path('django-rq/', include('django_rq.urls')),
+    path('accounts/', include('allauth.urls')),
 ]

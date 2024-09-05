@@ -71,6 +71,7 @@ def get_battlefield_timers(faction):
             "defender": translate_faction_id(battlefield_data.defender),
             "fc": battlefield_data.fc,
             "battlefield_type": battlefield_data.battlefield_type,
+            "id": battlefield_data.id,
         }
         scheduled_readable_battlefields.append(battlefield)
 

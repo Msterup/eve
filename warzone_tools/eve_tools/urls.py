@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+
 from .import views
 
 app_name = 'eve_tools'
@@ -24,4 +25,5 @@ app_name = 'eve_tools'
 urlpatterns = [
     path("index/", views.index, name="index"),
     path('tracker/<str:faction>/', views.tracker, name='battlefields_tracker'),
+    path('battlefield/<int:battlefield_id>/', views.battlefield_detail, name='battlefield_detail')
 ]

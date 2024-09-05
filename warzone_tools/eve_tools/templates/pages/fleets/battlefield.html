@@ -1,0 +1,29 @@
+{% extends 'eve_tools_base.html' %}
+
+{% block battlefield_content %}
+
+    <p><strong>Battlefield Type:</strong> {{ battlefield.battlefield_type }}</p>
+    <p><strong>Defender:</strong> {{ battlefield.defender }}</p>
+    <p><strong>Expected Time:</strong> {{ battlefield.expected_time }}</p>
+
+    <hr>
+
+    <!-- Show FC if available -->
+    {% if battlefield.fc %}
+        <p><strong>Fleet Commander (FC):</strong> {{ battlefield.fc.first_name }} {{ battlefield.fc.last_name }}</p>
+    {% else %}
+        <p>No FC has signed up for this battlefield yet.</p>
+    {% endif %}
+
+    <!-- List participants (if any) -->
+    <h4>Participants:</h4>
+    <ul>
+        {% for participant in battlefield.participants.all %}
+            <li>{{ participant.first_name }} {{ participant.last_name }}</li>
+        {% empty %}
+            <li>No participants signed up yet.</li>
+        {% endfor %}
+    </ul>
+
+    <!-- You can add forms for sign-up here if needed -->
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "eve_tools_base.html" %}
+
+{% load socialaccount %}  <!-- Load the socialaccount template tags -->
+
+{% block content %}
+    <div class="container">
+        <h2>Login to Your Account</h2>
+
+        <!-- Traditional login form -->
+        <form method="post" action="{% url 'account_login' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit" class="btn btn-primary">Log In</button>
+        </form>
+
+        <hr>
+
+        <!-- Social login options (like EVE Online login) -->
+        <h3>Or login with:</h3>
+        <ul>
+            {% get_providers as socialaccount_providers %}  <!-- Use the template tag to get providers -->
+            {% for provider in socialaccount_providers %}
+                <li>
+                    <a href="{% provider_login_url provider.id %}" class="btn btn-secondary">
+                        {{ provider.name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <p>Don't have an account? <a href="{% url 'account_signup' %}">Sign Up</a></p>
+        <p>Forgot your password? <a href="{% url 'account_reset_password' %}">Reset it</a></p>
+    </div>
+{% endblock %}

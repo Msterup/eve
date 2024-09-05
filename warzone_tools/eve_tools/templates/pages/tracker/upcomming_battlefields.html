@@ -5,15 +5,15 @@
         {% if scheduled_battlefields %}
             <div class="list-group list-group-flush">
                 {% for battlefield in scheduled_battlefields %}
-                    <div class="list-group-item">
+                    <a href="{% url 'eve_tools:battlefield_detail' battlefield.id %}" class="list-group-item list-group-item-action">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
                                 <span class="badge rounded-pill
-                                    {% if battlefield.type == 'Downtime' %}
+                                    {% if battlefield.battlefield_type == 'Downtime' %}
                                         bg-warning
-                                    {% elif battlefield.type == 'Normal' %}
+                                    {% elif battlefield.battlefield_type == 'Normal' %}
                                         bg-success
-                                    {% elif battlefield.type == 'System Flipped' %}
+                                    {% elif battlefield.battlefield_type == 'System Flipped' %}
                                         bg-danger
                                     {% else %}
                                         bg-secondary
@@ -36,7 +36,7 @@
                                 <span class="text-danger">No FC has signed up yet for this objective.</span>
                             {% endif %}
                         </div>
-                    </div>
+                    </a>
                 {% endfor %}
             </div>
         {% else %}

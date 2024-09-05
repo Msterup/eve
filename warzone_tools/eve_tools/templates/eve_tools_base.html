@@ -1,4 +1,3 @@
-<!-- eve_tools/templates/eve_tools/tracker.html -->
 {% extends "base.html" %}
 
 {% block content %}
@@ -6,4 +5,8 @@
         <h2>{% block battlefield_header %}Battlefield tracker{% endblock %}</h2>
         {% block battlefield_content %}{% endblock %}
     </div>
+{% endblock %}
+
+{% block navbar %}
+    {% include 'eve_tools_navbar.html' %}
 {% endblock %}

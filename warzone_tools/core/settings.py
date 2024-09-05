@@ -42,7 +42,7 @@ SECURE_HSTS_PRELOAD = True
 SECURE_SSL_REDIRECT = False
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-CSRF_TRUSTED_ORIGINS = ['https://msterup.xyz', 'https://www.msterup.xyz']
+CSRF_TRUSTED_ORIGINS = ['https://msterup.xyz', 'https://www.msterup.xyz', 'https://5.75.138.61']
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -58,7 +58,44 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',  # Required by allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.eveonline',  # Provider for EVE Online
 ]
+
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+LOGIN_REDIRECT_URL = '/eve_tools/index/'  # Redirect after login
+LOGOUT_REDIRECT_URL = '/eve_tools/index/'  # Redirect after logout
+
+# For HTTPS callback
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+
+SOCIALACCOUNT_PROVIDERS = {
+    'eveonline': {
+        'APP': {
+            'client_id': os.environ.get('EVE_CLIENT_ID'),  # From EVE Online
+            'secret': os.environ.get('EVE_SECRET_KEY'),  # From EVE Online
+            'redirect_uris': [
+                'https://yourdomain.com/accounts/eveonline/login/callback/'
+                ]
+        },
+        'SCOPE': [
+            'publicData',  # Define the scopes your app needs
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'OAUTH_PKCE_ENABLED': True,  # Optional: use Proof Key for Code Exchange (PKCE) for security
+    }
+}
 
 REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD', None)
 
@@ -83,6 +120,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+      'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
