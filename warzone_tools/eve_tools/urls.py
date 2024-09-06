@@ -25,5 +25,7 @@ app_name = 'eve_tools'
 urlpatterns = [
     path("index/", views.index, name="index"),
     path('tracker/<str:faction>/', views.tracker, name='battlefields_tracker'),
-    path('battlefield/<int:battlefield_id>/', views.battlefield_detail, name='battlefield_detail')
+    path('battlefield/<int:battlefield_id>/', views.battlefield_detail, name='battlefield_detail'),
+    path('system/<int:solarsystem_id>/', views.system_detail, name='system_detail'),
+    path('report-battlefield/', views.report_battlefield, name='report_battlefield'),
 ]

@@ -84,7 +84,7 @@ SOCIALACCOUNT_PROVIDERS = {
             'client_id': os.environ.get('EVE_CLIENT_ID'),  # From EVE Online
             'secret': os.environ.get('EVE_SECRET_KEY'),  # From EVE Online
             'redirect_uris': [
-                'https://yourdomain.com/accounts/eveonline/login/callback/'
+                os.environ.get('EVE_CALLBACK_URL')
                 ]
         },
         'SCOPE': [

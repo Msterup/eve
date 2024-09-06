@@ -12,6 +12,8 @@ services:
              python manage.py migrate &&
              python manage.py collectstatic --noinput &&
              gunicorn --bind 0.0.0.0:8000 core.wsgi:application"
+    env_file:
+      - .env
     volumes:
       - ./warzone_tools:/warzone_tools
       - ./warzone_tools/static:/app/static
@@ -23,6 +25,7 @@ services:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - EVE_CLIENT_ID=${EVE_CLIENT_ID}
       - EVE_SECRET_KEY=${EVE_SECRET_KEY}
+      - EVE_CALLBACK_URL=${EVE_CALLBACK_URL}
     depends_on:
       - redis
     networks:

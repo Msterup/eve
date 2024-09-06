@@ -53,6 +53,7 @@ def get_battlefield_timers(faction):
             "winner": translate_faction_id(battlefield_data.winner),
             "system": translate_system_id(battlefield_data.solar_system.solarsystem_id),
             "spawn_time": (battlefield_data.completion_time + timedelta(hours=4)).strftime('%Y-%m-%d %H:%M:%S'),
+            "id": battlefield_data.solar_system.solarsystem_id,
         }
         historic_readable_battlefields.append(battlefield)
 
@@ -86,6 +87,7 @@ def get_battlefield_timers(faction):
             "battlefield_type": battlefield_data.battlefield_type,
             "defender": translate_faction_id(battlefield_data.defender),
             "fc": battlefield_data.fc,
+            "id": battlefield_data.id,
         }
         live_readable_battlefields.append(battlefield)
 

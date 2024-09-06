@@ -1,0 +1,12 @@
+{% extends "eve_tools_base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Report Battlefield Completion</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+{% endblock %}

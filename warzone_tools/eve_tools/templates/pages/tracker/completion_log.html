@@ -2,9 +2,20 @@
     <div class="card-body">
         <h5 class="card-title">Battlefield completion log:</h5>
         <p class="card-text">Below is a list of the last three days' battlefield completions:</p>
+
+        <div class="mb-3">
+            {% if user.is_authenticated %}
+                <!-- Button for logged-in users -->
+                <a href="{% url 'eve_tools:report_battlefield' %}" class="btn btn-primary">Report Battlefield Completion</a>
+            {% else %}
+                <!-- Greyed out button for guests -->
+                <button class="btn btn-secondary" disabled>Login to Report Battlefield Completion</button>
+            {% endif %}
+        </div>
+
         <div class="list-group list-group-flush">
             {% for battlefield in historic_battlefields %}
-                <div class="list-group-item">
+                <a href="{% url 'eve_tools:system_detail' battlefield.id %}" class="list-group-item list-group-item-action">
                     <div class="d-flex justify-content-between align-items-center">
                         <strong>{{ battlefield.system }}</strong>
                         <!-- Time Display -->
@@ -17,7 +28,7 @@
                           {{ battlefield.spawn_time }}
                         </span>
                     </div>
-                </div>
+                </a>
             {% endfor %}
         </div>
     </div>

@@ -1,0 +1,31 @@
+{% extends "eve_tools_base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Solar System: {{ system.solarsystem_id }}</h2>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <h3>System Details</h3>
+            <ul>
+                <li><strong>Owner Faction:</strong> {{ system.owner_faction }}</li>
+                <li><strong>Occupier Faction:</strong> {{ system.occupier_faction }}</li>
+                <li><strong>Contested Status:</strong> {{ system.contested_status }}</li>
+                <li><strong>Contested Amount:</strong> {{ system.contested_amount }}%</li>
+            </ul>
+        </div>
+
+        <!-- Example of adding faction advantages or other related data -->
+        <div class="col-md-6">
+            <h3>Faction Advantages</h3>
+            <ul>
+                {% for advantage in system.advantages.all %}
+                    <li><strong>Faction:</strong> {{ advantage.faction_id }} - {{ advantage.total_amount }}%</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- You can add more details, such as system deltas or historical data -->
+</div>
+{% endblock %}
